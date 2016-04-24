@@ -10,6 +10,13 @@ GM.ItemCategoryIcons = {
 	[ITEMCAT_RETURNS] = "icon16/user_delete.png"
 }
 
+GM.ClassIcons = {
+	[CLASS_COMMANDO] = "icon16/gun.png",
+	[CLASS_BERSERKER] = "icon16/user_delete.png",
+	[CLASS_SUPPORT] = "icon16/box.png",
+	[CLASS_ENGINEER] = "icon16/wrench.png"
+}
+
 GM.LifeStatsLifeTime = 5
 
 GM.RewardIcons = {}

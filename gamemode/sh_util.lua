@@ -29,17 +29,19 @@ function FindStartingItem(id)
 
 	local num = tonumber(id)
 	if num then
-		t = GAMEMODE.Items[num]
+		t = GAMEMODE.ClassItems[num]
 	else
-		for i, tab in pairs(GAMEMODE.Items) do
-			if tab.Signature == id then
+		for i, tab in pairs(GAMEMODE.ClassItems) do
+			if tab.Class == id then
 				t = tab
 				break
 			end
 		end
 	end
-
-	if t and t.WorthShop then return t end
+	
+	
+	
+	if t then return t end
 end
 
 function FindItem(id)

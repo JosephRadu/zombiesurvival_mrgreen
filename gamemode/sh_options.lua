@@ -53,12 +53,6 @@ function GM:AddPointShopItem(signature, name, desc, category, points, worth, cal
 	return self:AddItem("ps_"..signature, name, desc, category, points, worth, callback, model, false, true)
 end
 
-GM.SupplyDropItems = {}
-function GM:AddSupplyDropItem(signature,wave,points)
-	local item = {Signature = signature, Wave = wave, Points = points}
-	self.SupplyDropItems[#self.SupplyDropItems + 1] = item	
-end
-
 -- Weapons are registered after the gamemode.
 timer.Simple(0, function()
 	for _, tab in pairs(GAMEMODE.Items) do
@@ -74,7 +68,7 @@ end)
 -- How much ammo is considered one 'clip' of ammo? For use with setting up weapon defaults. Works directly with zs_survivalclips
 GM.AmmoCache = {}
 GM.AmmoCache["ar2"] = 30 -- Assault rifles.
-GM.AmmoCache["alyxgun"] = 24 -- Not used.
+GM.AmmoCache["alyxgun"] = 1 -- Flare gun.
 GM.AmmoCache["pistol"] = 12 -- Pistols.
 GM.AmmoCache["smg1"] = 30 -- SMG's and some rifles.
 GM.AmmoCache["357"] = 6 -- Rifles, especially of the sniper variety.
@@ -126,6 +120,8 @@ GM:AddStartingItem("tossr", "'Tosser' SMG", nil, ITEMCAT_GUNS, 50, "weapon_zs_to
 GM:AddStartingItem("stbbr", "'Stubber' Rifle", nil, ITEMCAT_GUNS, 55, "weapon_zs_stubber")
 GM:AddStartingItem("crklr", "'Crackler' Assault Rifle", nil, ITEMCAT_GUNS, 50, "weapon_zs_crackler")
 GM:AddStartingItem("z9000", "'Z9000' Pulse Pistol", nil, ITEMCAT_GUNS, 50, "weapon_zs_z9000")
+
+GM:AddStartingItem("flare", "'Flaregun", nil, ITEMCAT_GUNS, 0, "weapon_zs_flaregun")
 
 GM:AddStartingItem("2pcp", "3 pistol ammo boxes", nil, ITEMCAT_AMMO, 15, nil, function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["pistol"] or 12) * 3, "pistol", true) end, "models/Items/BoxSRounds.mdl")
 GM:AddStartingItem("2sgcp", "3 shotgun ammo boxes", nil, ITEMCAT_AMMO, 15, nil, function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["buckshot"] or 8) * 3, "buckshot", true) end, "models/Items/BoxBuckshot.mdl")
@@ -263,10 +259,47 @@ GM:AddPointShopItem("50mkit", "50 Medical Kit power", "50 extra power for the Me
 GM:AddPointShopItem("grenade", "Grenade", nil, ITEMCAT_OTHER, 60, "weapon_zs_grenade")
 GM:AddPointShopItem("detpck", "Detonation Pack", nil, ITEMCAT_OTHER, 70, "weapon_zs_detpack")
 
+GM.SupplyDropItems = {}
+function GM:AddSupplyDropItem(signature,wave,points)
+	local item = {Signature = signature, Wave = wave, Points = points}
+	self.SupplyDropItems[#self.SupplyDropItems + 1] = item	
+	return item
+end
+
 GM:AddSupplyDropItem("deagle",1,30)
 GM:AddSupplyDropItem("glock3",1,30)
 GM:AddSupplyDropItem("magnum",1,30)
 GM:AddSupplyDropItem("eraser",1,30)
+
+CLASS_COMMANDO = 1
+CLASS_BERSERKER = 2
+CLASS_SUPPORT = 3
+CLASS_ENGINEER = 4
+
+CLASS_ITEM = 1
+CLASS_PERK = 2
+
+GM.Classes = {
+	[CLASS_COMMANDO] = "Commando",	
+	[CLASS_BERSERKER] = "Berserker",		
+	[CLASS_SUPPORT] = "Support",	
+	[CLASS_ENGINEER] = "Engineer"
+}
+
+GM.ClassItems = {}
+function GM:AddClassItem(name,swep,worth,class,itemType,callback)
+	local item = {Name = name, SWEP = swep, Worth = worth, Class = class, ItemType = itemType, Callback = callback}
+	self.ClassItems[#self.ClassItems + 1] = item
+	return item
+end
+
+GM:AddClassItem("P228", "weapon_zs_peashooter", 30,  CLASS_COMMANDO,CLASS_ITEM,nil)
+GM:AddClassItem("USP", "weapon_zs_battleaxe", 30, CLASS_COMMANDO,CLASS_ITEM,nil)
+GM:AddClassItem("AK-47", "weapon_zs_akbar", 60, CLASS_COMMANDO,CLASS_ITEM,nil)
+GM:AddClassItem("Swiss Army Knife", "weapon_zs_swissarmyknife", 10, CLASS_COMMANDO,CLASS_ITEM,nil)
+GM:AddClassItem("Stab-Proof Vest", nil, 40, CLASS_COMMANDO,CLASS_PERK,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() - 30)) pl:SetHealth(pl:GetMaxHealth()) pl.IsWeak = true end)
+
+
 
 -- These are the honorable mentions that come at the end of the round.
 
@@ -385,7 +418,7 @@ GM.NoNewHumansWave = 2
 GM.NoSuicideWave = 1
 
 -- How long 'wave 0' should last in seconds. This is the time you should give for new players to join and get ready.
-GM.WaveZeroLength = 150
+GM.WaveZeroLength = 200
 
 -- Time humans have between waves to do stuff without NEW zombies spawning. Any dead zombies will be in spectator (crow) view and any living ones will still be living.
 GM.WaveIntermissionLength = 90

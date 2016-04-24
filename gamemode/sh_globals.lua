@@ -139,6 +139,7 @@ GM.AmmoNames["slam"] = "Force Field Emitters"
 GM.AmmoNames["spotlamp"] = "Spot Lamps"
 GM.AmmoNames["stone"] = "Stones"
 GM.AmmoNames["pulse"] = "Pulse Shots"
+GM.AmmoNames["alyxgun"] = "Flares"
 
 GM.AmmoTranslations = {}
 GM.AmmoTranslations["weapon_physcannon"] = "pistol"
@@ -156,6 +157,7 @@ GM.AmmoModels["pistol"] = "models/Items/BoxSRounds.mdl" -- Pistols
 GM.AmmoModels["smg1"] = "models/Items/BoxMRounds.mdl" -- SMGs
 GM.AmmoModels["ar2"] = "models/Items/357ammobox.mdl" -- Assault rifles
 GM.AmmoModels["battery"] = "models/healthvial.mdl" -- Medical Kit charge
+GM.AmmoModels["alyxgun"] = "models/weapons/w_eq_flashbang_thrown.mdl"
 GM.AmmoModels["buckshot"] = "models/Items/BoxBuckshot.mdl" -- Buckshot
 GM.AmmoModels["357"] = "models/Items/357ammobox.mdl" -- Slugs
 GM.AmmoModels["xbowbolt"] = "models/Items/CrossbowRounds.mdl" -- Bolts

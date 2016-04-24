@@ -122,7 +122,7 @@ local function LoadCart(cartid, silent)
 		MakepWorth()
 		for _, id in pairs(GAMEMODE.SavedCarts[cartid][2]) do
 			for __, btn in pairs(WorthButtons) do
-				if btn and (btn.ID == id or GAMEMODE.Items[id] and GAMEMODE.Items[id].Signature == btn.ID) then
+				if btn and (btn.ID == id or GAMEMODE.ClassItems[id] and GAMEMODE.ClassItems[id].Class == btn.ID) then
 					btn:DoClick(true, true)
 				end
 			end
@@ -291,22 +291,34 @@ function MakepWorth()
 
 		list:AddItem(cartpan)
 	end
-
-	for catid, catname in ipairs(GAMEMODE.ItemCategories) do
+	
+	for catid, catname in ipairs(GAMEMODE.Classes) do
 		local list = vgui.Create("DPanelList", propertysheet)
 		list:SetPaintBackground(false)
-		propertysheet:AddSheet(catname, list, GAMEMODE.ItemCategoryIcons[catid], false, false)
+		propertysheet:AddSheet(catname, list, GAMEMODE.ClassIcons[catid], false, false)
 		list:EnableVerticalScrollbar(true)
 		list:SetWide(propertysheet:GetWide() - 16)
 		list:SetSpacing(2)
 		list:SetPadding(2)
 
-		for i, tab in ipairs(GAMEMODE.Items) do
-			if tab.Category == catid and tab.WorthShop then
+		local itemType = 1
+		for i, tab in ipairs(GAMEMODE.ClassItems) do
+			if tab.Class == catid then
+				
+				if (itemType != tab.ItemType) then
+					local button = vgui.Create("DButton")		
+					button:SetText("Perks")
+					button:SetFont("ZSHUDFontSmallest")
+					button.Paint = function( self, w, h )
+						draw.RoundedBox( 0, 0, 0, w, h, Color( 100, 105, 100, 20 ) ) -- Draw a blue button
+					end
+					list:AddItem(button)				
+				end
 				local button = vgui.Create("ZSWorthButton")
 				button:SetWorthID(i)
 				list:AddItem(button)
 				WorthButtons[i] = button
+				itemType = tab.ItemType
 			end
 		end
 	end
@@ -339,7 +351,7 @@ function MakepWorth()
 	clearbutton.DoClick = ClearCartDoClick
 
 	if #GAMEMODE.SavedCarts == 0 then
-		propertysheet:SetActiveTab(propertysheet.Items[math.min(2, #propertysheet.Items)].Tab)
+		propertysheet:SetActiveTab(propertysheet.ClassItems[math.min(2, #propertysheet.ClassItems)].Tab)
 	end
 
 	frame:Center()
@@ -419,7 +431,7 @@ function PANEL:SetWorthID(id)
 	self.ID = id
 
 	local tab = FindStartingItem(id)
-
+	
 	if not tab then
 		self.ModelPanel:SetVisible(false)
 		self.ItemCounter:SetVisible(false)
@@ -477,6 +489,7 @@ end
 function PANEL:DoClick(silent, force)
 	local id = self.ID
 	local tab = FindStartingItem(id)
+	
 	if not tab then return end
 
 	if self.On then

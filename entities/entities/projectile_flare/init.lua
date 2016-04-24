@@ -43,7 +43,7 @@ function ENT:Think()
 	
 	if self.descending then
 		local phys = self:GetPhysicsObject()
-		phys:SetVelocity(Vector(0,0,-220))
+		phys:SetVelocity(Vector(0,0,-190))
 	end
 	
 	if not self.skyHit then return end
