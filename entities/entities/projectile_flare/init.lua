@@ -13,7 +13,7 @@ ENT.descending = false
 ENT.supplyCalled = false
 
 function ENT:Initialize()
-	self.DieTime = CurTime() + 22
+	self.DieTime = CurTime() + 24
 	self:SetModel("models/weapons/w_grenade.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS )
 	self:SetSolid(SOLID_VPHYSICS)
@@ -74,7 +74,6 @@ function ENT:Think()
 		ent:SetKeyValue( "SmokeLifetime", 0 )
 		ent:SetKeyValue( "StartingHeight",  1000 )
 		local iSpawnFlags = 8192 + 16384 
-		if (bSecondary) then iSpawnFlags = iSpawnFlags + 4096 end //If Secondary, spawn impacted.
 		ent:SetKeyValue( "spawnflags", iSpawnFlags )
 		
 		ent:Spawn()

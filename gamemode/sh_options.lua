@@ -53,6 +53,12 @@ function GM:AddPointShopItem(signature, name, desc, category, points, worth, cal
 	return self:AddItem("ps_"..signature, name, desc, category, points, worth, callback, model, false, true)
 end
 
+GM.SupplyDropItems = {}
+function GM:AddSupplyDropItem(signature,wave,points)
+	local item = {Signature = signature, Wave = wave, Points = points}
+	self.SupplyDropItems[#self.SupplyDropItems + 1] = item	
+end
+
 -- Weapons are registered after the gamemode.
 timer.Simple(0, function()
 	for _, tab in pairs(GAMEMODE.Items) do
@@ -257,6 +263,10 @@ GM:AddPointShopItem("50mkit", "50 Medical Kit power", "50 extra power for the Me
 GM:AddPointShopItem("grenade", "Grenade", nil, ITEMCAT_OTHER, 60, "weapon_zs_grenade")
 GM:AddPointShopItem("detpck", "Detonation Pack", nil, ITEMCAT_OTHER, 70, "weapon_zs_detpack")
 
+GM:AddSupplyDropItem("deagle",1,30)
+GM:AddSupplyDropItem("glock3",1,30)
+GM:AddSupplyDropItem("magnum",1,30)
+GM:AddSupplyDropItem("eraser",1,30)
 
 -- These are the honorable mentions that come at the end of the round.
 

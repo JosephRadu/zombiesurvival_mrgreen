@@ -63,8 +63,6 @@ SWEP.IronSightsAng = Vector(0, 0, 1)
 
 
 function SWEP:PrimaryAttack()
-	self:EmitSound("weapons/flaregun/fire.wav")
-	self:ShootEffects(self)
 	
 	if not SERVER then
 		return
@@ -79,7 +77,13 @@ function SWEP:PrimaryAttack()
 	local skyTrace = util.QuickTrace( tr.HitPos, (tr.HitNormal:Angle()+Angle(90,-180,0)):Forward()*40000 )
 	if (skyTrace.HitSky) then
 		skyHit = true
+	else
+		return
 	end
+	
+
+	self:EmitSound("weapons/flaregun/fire.wav")
+	self:ShootEffects(self)
 	
 	local owner = self.Owner
 	if SERVER then
