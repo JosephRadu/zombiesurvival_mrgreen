@@ -80,6 +80,10 @@ include("sv_playerspawnentities.lua")
 include("sv_profiling.lua")
 include("sv_sigils.lua")
 
+include("player_extended_nosql.lua")
+include("database.lua")
+
+
 include("sv_zombieescape.lua")
 
 if file.Exists(GM.FolderName.."/gamemode/maps/"..game.GetMap()..".lua", "LUA") then

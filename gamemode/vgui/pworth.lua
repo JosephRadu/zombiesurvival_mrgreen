@@ -8,6 +8,22 @@ hook.Add("SetWave", "CloseWorthOnWave1", function(wave)
 	end
 end)
 
+net.Receive( "unlockitem", function()
+
+end )
+
+local XP = {}
+
+net.Receive("sendplayerdata", function()
+
+	XP[CLASS_COMMANDO] = net.ReadFloat()
+	XP[CLASS_SUPPORT] = net.ReadFloat()
+	XP[CLASS_ENGINEER] = net.ReadFloat()
+	
+	UnlockedItems = net.ReadTable()
+			MakepWorth()
+end)
+
 local cvarDefaultCart = CreateClientConVar("zs_defaultcart", "", true, false)
 
 local function DefaultDoClick(btn)
@@ -291,26 +307,41 @@ function MakepWorth()
 
 		list:AddItem(cartpan)
 	end
-	
+
 	for catid, catname in ipairs(GAMEMODE.Classes) do
+		local xpAmount = (XP[catid] or 0)
+		
 		local list = vgui.Create("DPanelList", propertysheet)
 		list:SetPaintBackground(false)
-		propertysheet:AddSheet(catname, list, GAMEMODE.ClassIcons[catid], false, false)
+		propertysheet:AddSheet(catname .. " " .. xpAmount .. "/20 XP", list, GAMEMODE.ClassIcons[catid], false, false)
 		list:EnableVerticalScrollbar(true)
 		list:SetWide(propertysheet:GetWide() - 16)
-		list:SetSpacing(2)
-		list:SetPadding(2)
+		list:SetSpacing(1)
+		list:SetPadding(1)
+		
+
+		local button = vgui.Create("DButton")		
+		button:SetText("Items")
+		button:SetFont("ZSHUDFontSmallest")
+		button.Paint = function( self, w, h )
+			draw.RoundedBox( 4, 0, 0, w, h, Color( 100, 110, 100, 110 ) )
+		end
+		list:AddItem(button)				
 
 		local itemType = 1
 		for i, tab in ipairs(GAMEMODE.ClassItems) do
 			if tab.Class == catid then
+				if (tab.XP and CheckUnlockedItem(tab.Signature)) then
+					tab.Unlocked = true
+				end
 				
 				if (itemType != tab.ItemType) then
 					local button = vgui.Create("DButton")		
 					button:SetText("Perks")
 					button:SetFont("ZSHUDFontSmallest")
+					
 					button.Paint = function( self, w, h )
-						draw.RoundedBox( 0, 0, 0, w, h, Color( 100, 105, 100, 20 ) ) -- Draw a blue button
+						draw.RoundedBox( 4, 0, 0, w, h, Color( 100, 110, 100, 110 ) )
 					end
 					list:AddItem(button)				
 				end
@@ -362,6 +393,16 @@ function MakepWorth()
 	return frame
 end
 
+function CheckUnlockedItem(itemSpecified)
+	for k, v in pairs(UnlockedItems) do
+		if ( v == itemSpecified) then
+			return true
+		end
+	end
+	return false
+end
+
+
 local PANEL = {}
 PANEL.m_ItemID = 0
 PANEL.RefreshTime = 1
@@ -403,7 +444,7 @@ function PANEL:Init()
 	self:SetTall(48)
 
 	local mdlframe = vgui.Create("DEXRoundedPanel", self)
-	mdlframe:SetWide(self:GetTall() - 8)
+	mdlframe:SetWide(self:GetTall())
 	mdlframe:Dock(LEFT)
 	mdlframe:DockMargin(0, 0, 20, 0)
 
@@ -466,13 +507,25 @@ function PANEL:SetWorthID(id)
 	self:SetTooltip(tab.Description)
 
 	if tab.NoClassicMode and GAMEMODE:IsClassicMode() or tab.NoZombieEscape and GAMEMODE.ZombieEscape then
-		self:SetAlpha(120)
+		self:SetAlpha(160)
 	else
 		self:SetAlpha(255)
 	end
-
+	
 	self.NameLabel:SetText(tab.Name or "")
+	if tab.XP and not tab.Unlocked then
+		self:SetAlpha(140)
+		self.NameLabel:SetText(tab.Name .. " (" .. tab.XP .. " XP)")
+	end
+	
 end
+
+local function UnlockItem(tab,self)
+	Derma_Query("Unlock " .. tostring(tab.Name) .. " for " .. tostring(tab.XP) .. " XP?","",
+	"Yes",function() if XP[tab.Class] or 0 >= tab.XP then RunConsoleCommand("unlockitem", tab.Signature, tab.XP) else Derma_Message( "not enuf expi", "", "k" ) end end,
+	"No", function() return end) 
+end
+
 
 function PANEL:Paint(w, h)
 	local outline
@@ -491,6 +544,12 @@ function PANEL:DoClick(silent, force)
 	local tab = FindStartingItem(id)
 	
 	if not tab then return end
+
+
+	if tab.XP and not tab.Unlocked then
+		UnlockItem(tab,self)
+		return
+	end
 
 	if self.On then
 		self.On = nil

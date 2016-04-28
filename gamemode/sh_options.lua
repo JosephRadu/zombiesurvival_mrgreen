@@ -287,17 +287,18 @@ GM.Classes = {
 }
 
 GM.ClassItems = {}
-function GM:AddClassItem(name,swep,worth,class,itemType,callback)
-	local item = {Name = name, SWEP = swep, Worth = worth, Class = class, ItemType = itemType, Callback = callback}
+function GM:AddClassItem(signature,name,swep,worth,class,itemType,callback,xp,desc)
+	local item = {Signature = signature, Name = name, SWEP = swep, Worth = worth, Class = class, ItemType = itemType, Callback = callback, XP = xp, Description = desc}
 	self.ClassItems[#self.ClassItems + 1] = item
 	return item
 end
 
-GM:AddClassItem("P228", "weapon_zs_peashooter", 30,  CLASS_COMMANDO,CLASS_ITEM,nil)
-GM:AddClassItem("USP", "weapon_zs_battleaxe", 30, CLASS_COMMANDO,CLASS_ITEM,nil)
-GM:AddClassItem("AK-47", "weapon_zs_akbar", 60, CLASS_COMMANDO,CLASS_ITEM,nil)
-GM:AddClassItem("Swiss Army Knife", "weapon_zs_swissarmyknife", 10, CLASS_COMMANDO,CLASS_ITEM,nil)
-GM:AddClassItem("Stab-Proof Vest", nil, 40, CLASS_COMMANDO,CLASS_PERK,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() - 30)) pl:SetHealth(pl:GetMaxHealth()) pl.IsWeak = true end)
+GM:AddClassItem("commando_p228","P228", "weapon_zs_peashooter", 30,  CLASS_COMMANDO,CLASS_ITEM,nil,4,nil)
+GM:AddClassItem(nil,"USP", "weapon_zs_battleaxe", 30, CLASS_COMMANDO,CLASS_ITEM,nil,nil,nil)
+GM:AddClassItem(nil,"MP7", "weapon_zs_tosser", 60, CLASS_COMMANDO,CLASS_ITEM,nil,nil,nil)
+GM:AddClassItem("commando_ak47","AK-47", "weapon_zs_akbar", 60, CLASS_COMMANDO,CLASS_ITEM,nil,12,nil)
+GM:AddClassItem(nil,"Swiss Army Knife", "weapon_zs_swissarmyknife", 10, CLASS_COMMANDO,CLASS_ITEM,nil,nil,nil)
+GM:AddClassItem("commando_vitality","Vitality", nil, 40, CLASS_COMMANDO,CLASS_PERK,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 10)) pl:SetHealth(pl:GetMaxHealth()) end,5,"+10 Maximum Health")
 
 
 
