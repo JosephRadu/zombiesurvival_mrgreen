@@ -276,29 +276,48 @@ CLASS_BERSERKER = 2
 CLASS_SUPPORT = 3
 CLASS_ENGINEER = 4
 
-CLASS_ITEM = 1
-CLASS_PERK = 2
+CLASS_AMMO = 1
+CLASS_ITEM = 2
+CLASS_PERK = 3
 
 GM.Classes = {
 	[CLASS_COMMANDO] = "Commando",	
 	[CLASS_BERSERKER] = "Berserker",		
 	[CLASS_SUPPORT] = "Support",	
-	[CLASS_ENGINEER] = "Engineer"
+	[CLASS_ENGINEER] = "Engineer",
+	
+	[CLASS_AMMO] = "Ammo"
 }
 
 GM.ClassItems = {}
-function GM:AddClassItem(signature,name,swep,worth,class,itemType,callback,xp,desc)
-	local item = {Signature = signature, Name = name, SWEP = swep, Worth = worth, Class = class, ItemType = itemType, Callback = callback, XP = xp, Description = desc}
+function GM:AddClassItem(signature,name,swep,worth,class,itemType,callback,xp,desc,model)
+	local item = {Signature = signature, Name = name, SWEP = swep, Worth = worth, Class = class, ItemType = itemType, Callback = callback, XP = xp, Description = desc, Model = model}
 	self.ClassItems[#self.ClassItems + 1] = item
 	return item
 end
+GM:AddClassItem(nil,"Swiss Army Knife", "weapon_zs_swissarmyknife", 10, CLASS_COMMANDO,CLASS_ITEM,nil,nil,nil,nil)
 
-GM:AddClassItem("commando_p228","P228", "weapon_zs_peashooter", 30,  CLASS_COMMANDO,CLASS_ITEM,nil,4,nil)
-GM:AddClassItem(nil,"USP", "weapon_zs_battleaxe", 30, CLASS_COMMANDO,CLASS_ITEM,nil,nil,nil)
-GM:AddClassItem(nil,"MP7", "weapon_zs_tosser", 60, CLASS_COMMANDO,CLASS_ITEM,nil,nil,nil)
-GM:AddClassItem("commando_ak47","AK-47", "weapon_zs_akbar", 60, CLASS_COMMANDO,CLASS_ITEM,nil,12,nil)
-GM:AddClassItem(nil,"Swiss Army Knife", "weapon_zs_swissarmyknife", 10, CLASS_COMMANDO,CLASS_ITEM,nil,nil,nil)
-GM:AddClassItem("commando_vitality","Vitality", nil, 40, CLASS_COMMANDO,CLASS_PERK,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 10)) pl:SetHealth(pl:GetMaxHealth()) end,5,"+10 Maximum Health")
+GM:AddClassItem("commando_p228","P228", "weapon_zs_peashooter", 30,  CLASS_COMMANDO,CLASS_ITEM,nil,5,nil,nil)
+GM:AddClassItem(nil,"USP", "weapon_zs_battleaxe", 30, CLASS_COMMANDO,CLASS_ITEM,nil,nil,nil,nil)
+GM:AddClassItem("commando_mp7","MP7", "weapon_zs_tosser", 50, CLASS_COMMANDO,CLASS_ITEM,nil,8,nil,nil)
+GM:AddClassItem("commando_famas","Famas", "weapon_zs_crackler", 50, CLASS_COMMANDO,CLASS_ITEM,nil,nil,nil,nil)
+GM:AddClassItem("commando_ak47","AK-47", "weapon_zs_akbar", 70, CLASS_COMMANDO,CLASS_ITEM,nil,15,nil,nil)
+
+GM:AddClassItem("commando_pistol_1", "pistol ammo box", nil, 10, CLASS_COMMANDO, CLASS_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl")
+GM:AddClassItem("commando_pistol_2", "3 pistol ammo boxes", nil, 20, CLASS_COMMANDO, CLASS_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["pistol"] or 12) * 3, "pistol", true) end,3,nil,"models/Items/BoxSRounds.mdl")
+
+GM:AddClassItem("commando_smg_1", "smg ammo box", nil, 10, CLASS_COMMANDO, CLASS_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["smg1"] or 30, "smg1", true) end,nil,nil,"models/Items/BoxMRounds.mdl")
+GM:AddClassItem("commando_smg_2", "3 smg ammo boxes", nil, 20, CLASS_COMMANDO, CLASS_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["smg1"] or 30) * 3, "smg1", true) end,4,nil,"models/Items/BoxMRounds.mdl")
+
+GM:AddClassItem("commando_ar2_1", "assault rifle ammo box", nil, 10, CLASS_COMMANDO, CLASS_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["ar2"] or 30, "ar2", true) end,nil,nil,"models/Items/357ammobox.mdl")
+GM:AddClassItem("commando_ar2_2", "3 assault rifle ammo boxes", nil, 20, CLASS_COMMANDO, CLASS_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["ar2"] or 30) * 3, "ar2", true) end,4,nil,"models/Items/357ammobox.mdl")
+
+GM:AddClassItem("commando_vitality_1","Vitality I", nil, 10, CLASS_COMMANDO,CLASS_PERK,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 10)) pl:SetHealth(pl:GetMaxHealth()) end,nil,"+10 Maximum Health",nil)
+GM:AddClassItem("commando_vitality_2","Vitality II", nil, 15, CLASS_COMMANDO,CLASS_PERK,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 15)) pl:SetHealth(pl:GetMaxHealth()) end,6,"+15 Maximum Health",nil)
+GM:AddClassItem("commando_vitality_3","Vitality III", nil, 20, CLASS_COMMANDO,CLASS_PERK,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 20)) pl:SetHealth(pl:GetMaxHealth()) end,12,"+20 Maximum Health",nil)
+
+
+
 
 
 

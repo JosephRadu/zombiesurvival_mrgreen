@@ -21,8 +21,10 @@ net.Receive("sendplayerdata", function()
 	XP[CLASS_ENGINEER] = net.ReadFloat()
 	
 	UnlockedItems = net.ReadTable()
-			MakepWorth()
+	MakepWorth()
 end)
+
+local Types = {}
 
 local cvarDefaultCart = CreateClientConVar("zs_defaultcart", "", true, false)
 
@@ -209,6 +211,10 @@ function MakepWorth()
 		pWorth = nil
 	end
 
+	Types[CLASS_AMMO] = "AMMO"
+	Types[CLASS_ITEM] = "ITEMS"
+	Types[CLASS_PERK] = "PERKS"
+	
 	local maxworth = GAMEMODE.StartingWorth
 	WorthRemaining = maxworth
 
@@ -319,27 +325,18 @@ function MakepWorth()
 		list:SetSpacing(1)
 		list:SetPadding(1)
 		
-
-		local button = vgui.Create("DButton")		
-		button:SetText("Items")
-		button:SetFont("ZSHUDFontSmallest")
-		button.Paint = function( self, w, h )
-			draw.RoundedBox( 4, 0, 0, w, h, Color( 100, 110, 100, 110 ) )
-		end
-		list:AddItem(button)				
-
-		local itemType = 1
+		local itemType = 0
 		for i, tab in ipairs(GAMEMODE.ClassItems) do
 			if tab.Class == catid then
+			
 				if (tab.XP and CheckUnlockedItem(tab.Signature)) then
 					tab.Unlocked = true
 				end
 				
 				if (itemType != tab.ItemType) then
 					local button = vgui.Create("DButton")		
-					button:SetText("Perks")
+					button:SetText(Types[tab.ItemType] or "TEST")
 					button:SetFont("ZSHUDFontSmallest")
-					
 					button.Paint = function( self, w, h )
 						draw.RoundedBox( 4, 0, 0, w, h, Color( 100, 110, 100, 110 ) )
 					end
@@ -514,15 +511,16 @@ function PANEL:SetWorthID(id)
 	
 	self.NameLabel:SetText(tab.Name or "")
 	if tab.XP and not tab.Unlocked then
-		self:SetAlpha(140)
+		self:SetAlpha(100)
 		self.NameLabel:SetText(tab.Name .. " (" .. tab.XP .. " XP)")
 	end
 	
 end
 
 local function UnlockItem(tab,self)
+	surface.PlaySound("buttons/button9.wav")
 	Derma_Query("Unlock " .. tostring(tab.Name) .. " for " .. tostring(tab.XP) .. " XP?","",
-	"Yes",function() if XP[tab.Class] or 0 >= tab.XP then RunConsoleCommand("unlockitem", tab.Signature, tab.XP) else Derma_Message( "not enuf expi", "", "k" ) end end,
+	"Yes",function() if XP[tab.Class] or 0 >= tab.XP then RunConsoleCommand("unlockitem", tab.Signature, tab.XP) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf xp", "", ":(" ) end end,
 	"No", function() return end) 
 end
 
