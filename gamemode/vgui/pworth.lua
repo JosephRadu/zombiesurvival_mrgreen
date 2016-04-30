@@ -8,6 +8,14 @@ hook.Add("SetWave", "CloseWorthOnWave1", function(wave)
 	end
 end)
 
+local classButton = {}
+local classFrames = {}
+
+local classList = {}
+local lists = {}
+
+UnlockedItems = {}
+
 net.Receive( "unlockitem", function()
 
 end )
@@ -17,9 +25,10 @@ local XP = {}
 net.Receive("sendplayerdata", function()
 
 	XP[CLASS_COMMANDO] = net.ReadFloat()
-	XP[CLASS_SUPPORT] = net.ReadFloat()
 	XP[CLASS_ENGINEER] = net.ReadFloat()
-	
+	XP[CLASS_SUPPORT] = net.ReadFloat()
+	XP[CLASS_BERSERKER] = net.ReadFloat()
+
 	UnlockedItems = net.ReadTable()
 	MakepWorth()
 end)
@@ -83,7 +92,32 @@ local function CartDoClick(self, silent, force)
 	pWorth.WorthLab:SizeToContents()
 end
 
+local function SetClass(class)
+
+	local classString = nil
+	
+	if class == CLASS_COMMANDO then
+		classString = "commando"
+	elseif class == CLASS_SUPPORT then
+		classString = "support"
+	elseif class == CLASS_ENGINEER then
+		classString = "engineer"	
+	end
+
+	RunConsoleCommand("setClass", classString)
+end
+
+
 local function Checkout(tobuy)
+	local classSelected = nil
+	for k,v in pairs (classButton) do
+		if v.Active then
+			classSelected = v.Class
+			
+			break
+		end
+	end
+	SetClass(classSelected)
 	if tobuy and #tobuy > 0 then
 		gamemode.Call("SuppressArsenalUpgrades", 1)
 
@@ -99,12 +133,12 @@ end
 
 local function CheckoutDoClick(self)
 	local tobuy = {}
+	
 	for _, btn in pairs(WorthButtons) do
 		if btn and btn.On and btn.ID then
 			table.insert(tobuy, btn.ID)
 		end
 	end
-
 	Checkout(tobuy)
 end
 
@@ -210,15 +244,11 @@ function MakepWorth()
 		pWorth:Remove()
 		pWorth = nil
 	end
-
-	Types[CLASS_AMMO] = "AMMO"
-	Types[CLASS_ITEM] = "ITEMS"
-	Types[CLASS_PERK] = "PERKS"
 	
 	local maxworth = GAMEMODE.StartingWorth
 	WorthRemaining = maxworth
 
-	local wid, hei = math.min(ScrW(), 720), ScrH() * 0.7
+	local wid, hei = math.min(ScrW(), 1024), ScrH() * 0.7
 
 	local frame = vgui.Create("DFrame")
 	pWorth = frame
@@ -231,22 +261,23 @@ function MakepWorth()
 	propertysheet:StretchToParent(4, 24, 4, 50)
 	propertysheet.Paint = function() end
 
-	local list = vgui.Create("DPanelList", propertysheet)
-	propertysheet:AddSheet("Favorites", list, "icon16/heart.png", false, false)
+	local panfont = "ZSHUDFontSmall"
+	local panhei = 40
+
+	local defaultcart = cvarDefaultCart:GetString()
+	
+	--[[
+	local list = vgui.Create("DPanelList", itemFrame)
+	itemFrame:AddSheet("Favorites", list, "icon16/heart.png", false, false)
 	list:EnableVerticalScrollbar(true)
-	list:SetWide(propertysheet:GetWide() - 16)
+	list:SetWide(itemFrame:GetWide() - 16)
 	list:SetSpacing(2)
 	list:SetPadding(2)
 
 	local savebutton = EasyButton(nil, "Save the current cart", 0, 10)
 	savebutton.DoClick = SaveDoClick
 	list:AddItem(savebutton)
-
-	local panfont = "ZSHUDFontSmall"
-	local panhei = 40
-
-	local defaultcart = cvarDefaultCart:GetString()
-
+	
 	for i, savetab in ipairs(GAMEMODE.SavedCarts) do
 		local cartpan = vgui.Create("DEXRoundedPanel")
 		cartpan:SetCursor("pointer")
@@ -313,43 +344,95 @@ function MakepWorth()
 
 		list:AddItem(cartpan)
 	end
-
-	for catid, catname in ipairs(GAMEMODE.Classes) do
-		local xpAmount = (XP[catid] or 0)
+	
+	]]--
+	local classPanel = {}
 		
-		local list = vgui.Create("DPanelList", propertysheet)
-		list:SetPaintBackground(false)
-		propertysheet:AddSheet(catname .. " " .. xpAmount .. "/20 XP", list, GAMEMODE.ClassIcons[catid], false, false)
-		list:EnableVerticalScrollbar(true)
-		list:SetWide(propertysheet:GetWide() - 16)
-		list:SetSpacing(1)
-		list:SetPadding(1)
 		
-		local itemType = 0
-		for i, tab in ipairs(GAMEMODE.ClassItems) do
-			if tab.Class == catid then
+	for classid, classname in ipairs(GAMEMODE.Classes) do
+		local xpAmount = (XP[classid] or 0)
 			
-				if (tab.XP and CheckUnlockedItem(tab.Signature)) then
-					tab.Unlocked = true
-				end
+		classButton[classid] = vgui.Create( "DButton", propertysheet )
+		classButton[classid]:SetText(classname .. "\n" .. xpAmount .. "/20 XP" )
+		classButton[classid].Class = classid
+		classButton[classid]:SetTextColor( Color( 255, 255, 255 ) )
+		classButton[classid]:SetPos(10, -50 + classid * 50 )
+		classButton[classid]:SetSize( wid * 0.18, 50 )
+		classButton[classid].Paint = function( self, w, h )
+			if classButton[classid].Active then
+				outline = COLOR_LIMEGREEN		
+			elseif self.Hovered then
+				outline = self.On and COLOR_GREEN or COLOR_GRAY
+			else
+				outline = self.On and COLOR_DARKGREEN or COLOR_DARKGRAY
+			end
+			draw.RoundedBox(8, 0, 0, w, h, outline)
+			draw.RoundedBox(4, 4, 4, w - 8, h - 8, color_black)
+		end
+			
+		classButton[classid]:SetFont("ZSHUDFontSmallest")
+		classPanel[classid] = vgui.Create("DPanel",frame)
+		classPanel[classid]:SetSize(wid * 0.67, hei * 0.8)
+		classPanel[classid]:SetKeyboardInputEnabled(false)
+		classPanel[classid]:SetPos(216,26)
+		classPanel[classid]:SetVisible(false)
+		
+		classPanel[classid]:SetBackgroundColor(Color(255,255,255,255))
+		classPanel[classid]:SetAlpha(255)
+		
+		
+		local classSheet = vgui.Create("DPropertySheet",classPanel[classid])
+		classSheet:SetSize(wid * 0.67, hei * 0.8)
+		classSheet:SetKeyboardInputEnabled(false)
+		classSheet:SetPos(0,0)		
+		classSheet.Paint = function() end
+		
+		for classcategoryid, classcategory in ipairs(GAMEMODE.ClassItemCategories) do
+			local list = vgui.Create("DPanelList", classSheet)
+			list:SetPaintBackground(false)
+			classSheet:AddSheet(classcategory,list, GAMEMODE.ItemCategoryIcons[classcategoryid], false, false)
+			list:EnableVerticalScrollbar(true)
+			list:SetWide(classSheet:GetWide() - 16)
+			list:SetSpacing(1)
+			list:SetPadding(1)
+			for i, tab in ipairs(GAMEMODE.ClassItems) do
 				
-				if (itemType != tab.ItemType) then
-					local button = vgui.Create("DButton")		
-					button:SetText(Types[tab.ItemType] or "TEST")
-					button:SetFont("ZSHUDFontSmallest")
-					button.Paint = function( self, w, h )
-						draw.RoundedBox( 4, 0, 0, w, h, Color( 100, 110, 100, 110 ) )
+				if tab.ItemType == classcategoryid and (tab.Class == classid) then
+					local button = vgui.Create("ZSWorthButton")
+					button:SetWorthID(i)
+					list:AddItem(button)
+					WorthButtons[i] = button
+					
+					if (tab.XP and CheckUnlockedItem(tab.Signature)) then
+						tab.Unlocked = true
 					end
-					list:AddItem(button)				
 				end
-				local button = vgui.Create("ZSWorthButton")
-				button:SetWorthID(i)
-				list:AddItem(button)
-				WorthButtons[i] = button
-				itemType = tab.ItemType
 			end
 		end
+
+		classButton[classid].DoClick = function()
+			for k,v in pairs (classButton) do
+				v.Active = false
+			end
+		classButton[classid].Active = true
+			for k, v in pairs (classPanel) do
+				v:SetVisible(false)
+				if k == classid then
+					classPanel[classid]:SetVisible(true)
+				end
+			end
+			
+			for _, btn in ipairs(WorthButtons) do
+				if btn.On then
+					btn:DoClick(true, true)
+				end
+			end
+		end
+		
 	end
+
+
+
 
 	local worthlab = EasyLabel(frame, "Worth: "..tostring(WorthRemaining), "ZSHUDFontSmall", COLOR_LIMEGREEN)
 	worthlab:SetPos(8, frame:GetTall() - worthlab:GetTall() - 8)
@@ -378,9 +461,9 @@ function MakepWorth()
 	clearbutton:MoveAbove(randombutton, 8)
 	clearbutton.DoClick = ClearCartDoClick
 
-	if #GAMEMODE.SavedCarts == 0 then
-		propertysheet:SetActiveTab(propertysheet.ClassItems[math.min(2, #propertysheet.ClassItems)].Tab)
-	end
+	--if #GAMEMODE.SavedCarts == 0 then
+	--	propertysheet:SetActiveTab(propertysheet.ClassItems[math.min(2, #propertysheet.ClassItems)].Tab)
+	--end
 
 	frame:Center()
 	frame:SetAlpha(0)
@@ -391,11 +474,13 @@ function MakepWorth()
 end
 
 function CheckUnlockedItem(itemSpecified)
-	for k, v in pairs(UnlockedItems) do
-		if ( v == itemSpecified) then
-			return true
+	--if (UnlockedItems) then
+		for k, v in pairs(UnlockedItems) do
+			if ( v == itemSpecified) then
+				return true
+			end
 		end
-	end
+	--end
 	return false
 end
 
@@ -520,7 +605,7 @@ end
 local function UnlockItem(tab,self)
 	surface.PlaySound("buttons/button9.wav")
 	Derma_Query("Unlock " .. tostring(tab.Name) .. " for " .. tostring(tab.XP) .. " XP?","",
-	"Yes",function() if XP[tab.Class] or 0 >= tab.XP then RunConsoleCommand("unlockitem", tab.Signature, tab.XP) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf xp", "", ":(" ) end end,
+	"Yes",function() if XP[tab.Class] != nil and XP[tab.Class] or 0 >= tab.XP then RunConsoleCommand("unlockitem", tab.Signature, tab.XP) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf xp", "", ":(" ) end end,
 	"No", function() return end) 
 end
 

@@ -14,6 +14,10 @@ function meta:GetXPEngineer()
 	return self.XP_Engineer
 end
 
+function meta:GetXPBerserker()
+	return self.XP_Berserker
+end
+
 function meta:SetClass(class)
 	self.CurrentClass = class
 end
@@ -31,6 +35,8 @@ function meta:GiveXP( amount , class )
 		self.XP_Support = self.XP_Support + amount
 	elseif (curClass == 'engineer') then
 		self.XP_Engineer = self.XP_Engineer + amount
+	elseif (curClass == 'berserker') then
+		self.XP_Berserker = self.XP_Berserker + amount
 	end
 
 	--GAMEMODE:UpdatePlayerStats( self, self.m_CurentXP )

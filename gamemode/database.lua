@@ -16,6 +16,7 @@ function GM:SendPlayerData(pl)
 		net.WriteFloat(pl.XP_Commando)
 		net.WriteFloat(pl.XP_Engineer)
 		net.WriteFloat(pl.XP_Support)
+		net.WriteFloat(pl.XP_Berserker)
 		net.WriteTable(pl.Items)
 	net.Send(pl)
 end
@@ -38,7 +39,8 @@ function GM:GetBlankStats( pl )
 		{
 			[ 'commando' ] = 0,
 			[ 'support' ] = 0,
-			[ 'engineer' ] = 0
+			[ 'engineer' ] = 0,
+			[ 'berserker' ] = 0
 		}
 	}
 		
@@ -89,6 +91,9 @@ function GM:ReadData( pl )
 				if ( p == 'engineer' ) then
 					pl.XP_Engineer = j
 				end
+				if ( p == 'berserker' ) then
+					pl.XP_Berserker = j
+				end
 			end
 		end
 	end
@@ -108,7 +113,8 @@ function GM:SaveData( pl )
 				{
 					[ 'commando' ] = pl:GetXPCommando(),
 					[ 'support' ] = pl:GetXPSupport(),
-					[ 'engineer' ] = pl:GetXPEngineer()
+					[ 'engineer' ] = pl:GetXPEngineer(),
+					[ 'berserker' ] = pl:GetXPBerserker()
 				},
 		}
 	local newData =  util.TableToJSON( data )
@@ -147,7 +153,7 @@ concommand.Add( "unlockitem", function( pl, cmd, args )
 			pl:GiveXP(tonumber(args[2]) * -1, "commando")
 		end
 	end
-	
+
 	pl:UnlockItem(args[ 1 ])
 	GAMEMODE:SaveData(pl)
 	
@@ -167,7 +173,7 @@ concommand.Add( "saveData", function( pl )
 	GAMEMODE:SaveData( pl )
 end )
 
-concommand.Add( "setClass", function( pl, cdm, args )
+concommand.Add( "setClass", function( pl, cmd, args )
 	pl.CurrentClass = tostring(args[1])
 end )
 

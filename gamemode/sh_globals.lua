@@ -92,10 +92,10 @@ ZE_KNOCKBACKSCALE = 0.1
 
 MASK_HOVER = bit.bor(CONTENTS_OPAQUE, CONTENTS_GRATE, CONTENTS_HITBOX, CONTENTS_DEBRIS, CONTENTS_SOLID, CONTENTS_WATER, CONTENTS_SLIME, CONTENTS_WINDOW, CONTENTS_LADDER, CONTENTS_PLAYERCLIP, CONTENTS_MOVEABLE, CONTENTS_DETAIL, CONTENTS_TRANSLUCENT)
 
-GM.BarricadeHealthMin = 50
-GM.BarricadeHealthMax = 1100
-GM.BarricadeHealthMassFactor = 3
-GM.BarricadeHealthVolumeFactor = 4
+GM.BarricadeHealthMin = 60
+GM.BarricadeHealthMax = 600
+GM.BarricadeHealthMassFactor = 1.2
+GM.BarricadeHealthVolumeFactor = 1.5
 
 GM.BossZombiePlayersRequired = 16
 

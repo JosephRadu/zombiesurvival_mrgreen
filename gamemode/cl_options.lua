@@ -7,14 +7,12 @@ GM.ItemCategoryIcons = {
 	[ITEMCAT_MELEE] = "icon16/cog.png",
 	[ITEMCAT_TOOLS] = "icon16/wrench.png",
 	[ITEMCAT_OTHER] = "icon16/world.png",
-	[ITEMCAT_RETURNS] = "icon16/user_delete.png"
-}
-
-GM.ClassIcons = {
-	[CLASS_COMMANDO] = "icon16/gun.png",
-	[CLASS_BERSERKER] = "icon16/user_delete.png",
-	[CLASS_SUPPORT] = "icon16/box.png",
-	[CLASS_ENGINEER] = "icon16/wrench.png"
+	[ITEMCAT_RETURNS] = "icon16/user_delete.png",
+	[ITEMCAT_WEAPONS] = "icon16/gun.png",
+	[ITEMCAT_PERKS] = "icon16/rosette.png",
+	
+	
+	
 }
 
 GM.LifeStatsLifeTime = 5
