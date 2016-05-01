@@ -11,7 +11,7 @@ ENT.InitialDrop = false
 local playersUsed = {}
 
 function ENT:Initialize()
-playersUsed = {}
+	playersUsed = {}
 	self:PhysicsInit(SOLID_NONE)
 	self.Launched = CurTime()
 	self:SetPlaybackRate(0.1)
@@ -28,16 +28,18 @@ function ENT:Use( activator, caller )
 	if not self.Active then return end
 	
 	if self.InitialDrop then
-		if (not table.HasValue(playersUsed, activator)) then
-		local wep = activator:Give("weapon_zs_" .. table.Random(possibleWeps))
-		net.Start("zs_canisteruse")
-		net.WriteBool(true)
-		net.Send(activator)
-		playersUsed[#playersUsed + 1] = activator
+		if next(possibleWeps) != nil then
+		
+			if (not table.HasValue(playersUsed, activator)) then
+			local wep = activator:Give(table.Random(possibleWeps))
+			net.Start("zs_canisteruse")
+			net.WriteBool(true)
+			net.Send(activator)
+			playersUsed[#playersUsed + 1] = activator
+			end
 		end
 	end
 	
-
 	if self.InitialDrop then return end
 	
 	self.InitialDrop = true
@@ -56,12 +58,12 @@ function ENT:Use( activator, caller )
 	local humans = table.Count(team.GetPlayers(TEAM_HUMAN))
 		
 	for k, v in pairs(GAMEMODE.SupplyDropItems) do
-		if v.Wave <= GAMEMODE:GetWave() then
+		if v.Wave == GAMEMODE:GetWave() then
 			local wep = ents.Create("prop_weapon")
 			if wep:IsValid() then
-				wep:SetPos(self:GetPos() + Vector(math.random(-6,6),math.random(-6,6),48))
+				wep:SetPos(self:GetPos() + Vector(math.random(-6,6),math.random(-6,6),64))
 				wep:SetAngles(self:GetAngles())
-				wep:SetWeaponType("weapon_zs_" .. v.Signature)
+				wep:SetWeaponType(v.Signature)
 				wep:SetShouldRemoveAmmo(true)
 				wep:Spawn()	
 				possibleWeps[#possibleWeps + 1] = v.Signature

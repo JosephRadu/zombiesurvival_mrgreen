@@ -16,11 +16,8 @@ local lists = {}
 
 UnlockedItems = {}
 
-net.Receive( "unlockitem", function()
-
-end )
-
-local XP = {}
+XP = {}
+SCRAP = 0
 
 net.Receive("sendplayerdata", function()
 
@@ -28,7 +25,7 @@ net.Receive("sendplayerdata", function()
 	XP[CLASS_ENGINEER] = net.ReadFloat()
 	XP[CLASS_SUPPORT] = net.ReadFloat()
 	XP[CLASS_BERSERKER] = net.ReadFloat()
-
+	SCRAP = net.ReadFloat()
 	UnlockedItems = net.ReadTable()
 	MakepWorth()
 end)
@@ -252,6 +249,7 @@ function MakepWorth()
 
 	local frame = vgui.Create("DFrame")
 	pWorth = frame
+	pScrap = frame
 	frame:SetSize(wid, hei)
 	frame:SetDeleteOnClose(true)
 	frame:SetKeyboardInputEnabled(false)
@@ -353,7 +351,8 @@ function MakepWorth()
 		local xpAmount = (XP[classid] or 0)
 			
 		classButton[classid] = vgui.Create( "DButton", propertysheet )
-		classButton[classid]:SetText(classname .. "\n" .. xpAmount .. "/20 XP" )
+		classButton[classid]:SetText(classname .. "\n" .. xpAmount .. "/" .. LIMIT_XP .. " XP" )
+		classButton[classid]:AlignLeft()
 		classButton[classid].Class = classid
 		classButton[classid]:SetTextColor( Color( 255, 255, 255 ) )
 		classButton[classid]:SetPos(10, -50 + classid * 50 )
@@ -403,7 +402,7 @@ function MakepWorth()
 					list:AddItem(button)
 					WorthButtons[i] = button
 					
-					if (tab.XP and CheckUnlockedItem(tab.Signature)) then
+					if (tab.XP or tab.Scrap)and CheckUnlockedItem(tab.Signature) then
 						tab.Unlocked = true
 					end
 				end
@@ -415,6 +414,7 @@ function MakepWorth()
 				v.Active = false
 			end
 		classButton[classid].Active = true
+			surface.PlaySound("ui/buttonclick.wav")
 			for k, v in pairs (classPanel) do
 				v:SetVisible(false)
 				if k == classid then
@@ -431,12 +431,13 @@ function MakepWorth()
 		
 	end
 
-
-
-
 	local worthlab = EasyLabel(frame, "Worth: "..tostring(WorthRemaining), "ZSHUDFontSmall", COLOR_LIMEGREEN)
 	worthlab:SetPos(8, frame:GetTall() - worthlab:GetTall() - 8)
 	frame.WorthLab = worthlab
+	
+	local scraplab = EasyLabel(frame, (" Scrap: ".. SCRAP .."/100"), "ZSHUDFontSmall", COLOR_DARKGREEN)
+	scraplab:SetPos(8, frame:GetTall() - scraplab:GetTall() - 48)
+	frame.ScrapLab = scraplab
 
 	local checkout = vgui.Create("DButton", frame)
 	checkout:SetFont("ZSHUDFontSmall")
@@ -600,6 +601,11 @@ function PANEL:SetWorthID(id)
 		self.NameLabel:SetText(tab.Name .. " (" .. tab.XP .. " XP)")
 	end
 	
+	if tab.Scrap and not tab.Unlocked then
+		self:SetAlpha(100)
+		self.NameLabel:SetText(tab.Name .. " (" .. tab.Scrap .. " Scrap)")
+	end
+	
 end
 
 local function UnlockItem(tab,self)
@@ -609,6 +615,13 @@ local function UnlockItem(tab,self)
 	"No", function() return end) 
 end
 
+local function UnlockScrapItem(tab,self)
+	surface.PlaySound("buttons/button9.wav")
+	Derma_Query("Unlock " .. tostring(tab.Name) .. " for " .. tostring(tab.Scrap) .. " Scrap?","",
+	"Yes",function() if SCRAP != nil and SCRAP or 0 >= tab.Scrap then RunConsoleCommand("unlockscrapitem", tab.Signature, tab.Scrap) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf scrap", "", ":(" ) end end,
+	"No", function() return end) 
+	pScrap.ScrapLab:SetText(" Scrap: ".. SCRAP .."/" .. LIMIT_SCRAP)	
+end
 
 function PANEL:Paint(w, h)
 	local outline
@@ -633,6 +646,11 @@ function PANEL:DoClick(silent, force)
 		UnlockItem(tab,self)
 		return
 	end
+	
+	if tab.Scrap and not tab.Unlocked then
+		UnlockScrapItem(tab,self)
+		return
+	end
 
 	if self.On then
 		self.On = nil
@@ -651,7 +669,7 @@ function PANEL:DoClick(silent, force)
 		end
 		WorthRemaining = WorthRemaining - tab.Worth
 	end
-
+					
 	pWorth.WorthLab:SetText("Worth: ".. WorthRemaining)
 	if WorthRemaining <= 0 then
 		pWorth.WorthLab:SetTextColor(COLOR_RED)

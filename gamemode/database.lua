@@ -1,5 +1,4 @@
 hook.Add( 'Initialize', 'noSQL', function()
-	util.AddNetworkString( "unlockitem" )
 	util.AddNetworkString( "sendplayerdata" )
 	
 	if ( !file.IsDir("noSQL","DATA") ) then
@@ -8,6 +7,7 @@ hook.Add( 'Initialize', 'noSQL', function()
 end )
 
 function GM:PlayerUnlockItem(pl,item)
+	GAMEMODE:SaveData(pl)
 	GAMEMODE:SendPlayerData(pl)
 end
 
@@ -17,11 +17,10 @@ function GM:SendPlayerData(pl)
 		net.WriteFloat(pl.XP_Engineer)
 		net.WriteFloat(pl.XP_Support)
 		net.WriteFloat(pl.XP_Berserker)
+		net.WriteFloat(pl.Scrap)
 		net.WriteTable(pl.Items)
 	net.Send(pl)
 end
-
-
 
 //So this shit exists, but does it for the player?
 hook.Add( 'PlayerInitialSpawn', 'noSQL Read Data', function( pl )
@@ -41,9 +40,16 @@ function GM:GetBlankStats( pl )
 			[ 'support' ] = 0,
 			[ 'engineer' ] = 0,
 			[ 'berserker' ] = 0
-		}
+		},
+		[ 'scrap' ] = 0
 	}
 		
+		
+	pl.XP_Commando = 0
+	pl.XP_Support = 0
+	pl.XP_Engineer = 0
+	pl.XP_Berserker = 0
+	pl.Scrap = 0		
 	return data
 end
 
@@ -68,10 +74,6 @@ function GM:ReadData( pl )
 	end
 	fileData = util.JSONToTable( file.Read( path ) )
 	pl.DataTable = table.Copy( fileData )
-	
-	pl.XP_Commando = 0
-	pl.XP_Support = 0
-	pl.XP_Engineer = 0
 						
 	for k, v in pairs( pl.DataTable ) do
 		if( k == 'items' ) then
@@ -96,6 +98,9 @@ function GM:ReadData( pl )
 				end
 			end
 		end
+		if ( k == 'scrap' ) then
+			pl.Scrap = v
+		end
 	end
 	
 	GAMEMODE:SendPlayerData(pl)
@@ -116,6 +121,7 @@ function GM:SaveData( pl )
 					[ 'engineer' ] = pl:GetXPEngineer(),
 					[ 'berserker' ] = pl:GetXPBerserker()
 				},
+			[ 'scrap' ] = pl:GetScrap()
 		}
 	local newData =  util.TableToJSON( data )
 	file.Write( path, newData )
@@ -152,11 +158,38 @@ concommand.Add( "unlockitem", function( pl, cmd, args )
 		else
 			pl:GiveXP(tonumber(args[2]) * -1, "commando")
 		end
+	elseif string.match(args[1],"support") then
+		if tonumber(args[2]) > pl:GetXPSupport() then
+			return
+		else
+			pl:GiveXP(tonumber(args[2]) * -1, "support")
+		end
+	elseif string.match(args[1],"berserker") then
+		if tonumber(args[2]) > pl:GetXPBerserker() then
+			return
+		else
+			pl:GiveXP(tonumber(args[2]) * -1, "berserker")
+		end
+	elseif string.match(args[1],"engineer") then
+		if tonumber(args[2]) > pl:GetXPEngineer() then
+			return
+		else
+			pl:GiveXP(tonumber(args[2]) * -1, "engineer")
+		end		
 	end
 
 	pl:UnlockItem(args[ 1 ])
 	GAMEMODE:SaveData(pl)
-	
+end )
+
+concommand.Add( "unlockscrapitem", function( pl, cmd, args )
+	if tonumber(args[2]) > pl:GetScrap() then
+		return
+	else
+		pl:GiveScrap(tonumber(args[2]) * -1)
+	end
+	pl:UnlockItem(args[ 1 ])
+	GAMEMODE:SaveData(pl)
 end )
 
 concommand.Add( "givexp", function( pl, cmd, args )
@@ -176,4 +209,11 @@ end )
 concommand.Add( "setClass", function( pl, cmd, args )
 	pl.CurrentClass = tostring(args[1])
 end )
+
+concommand.Add( "givescrap", function( pl, cmd, args )
+	if( args[ 1 ] && IsValid( pl ) ) then
+		pl:GiveScrap( tonumber( args[ 1 ] ) )
+	end
+end )
+
 

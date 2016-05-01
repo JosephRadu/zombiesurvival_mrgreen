@@ -881,3 +881,21 @@ end
 function meta:GetRight()
 	return self:SyncAngles():Right()
 end
+
+function meta:DropFlareGun()
+	local pos = self:LocalToWorld(self:OBBCenter())
+	local ent = ents.Create("prop_weapon")
+	if ent:IsValid() then
+		ent:SetPos(pos)
+		ent:SetAngles(AngleRand())
+		ent:SetWeaponType("weapon_zs_flaregun")
+		ent:Spawn()
+
+		local phys = ent:GetPhysicsObject()
+		if phys:IsValid() then
+			phys:Wake()
+			phys:SetVelocityInstantaneous(VectorRand():GetNormalized() * math.Rand(24, 100))
+			phys:AddAngleVelocity(VectorRand() * 200)
+		end
+	end
+end

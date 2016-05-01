@@ -369,11 +369,11 @@ function GM:Move(pl, move)
 			move:SetMaxSpeed(36)
 			move:SetMaxClientSpeed(36)
 		elseif move:GetForwardSpeed() < 0 then
-			move:SetMaxSpeed(move:GetMaxSpeed() * 0.5)
-			move:SetMaxClientSpeed(move:GetMaxClientSpeed() * 0.5)
+			move:SetMaxSpeed(move:GetMaxSpeed() * 0.8)
+			move:SetMaxClientSpeed(move:GetMaxClientSpeed() * 0.8)
 		elseif move:GetForwardSpeed() == 0 then
-			move:SetMaxSpeed(move:GetMaxSpeed() * 0.85)
-			move:SetMaxClientSpeed(move:GetMaxClientSpeed() * 0.85)
+			move:SetMaxSpeed(move:GetMaxSpeed() * 0.95)
+			move:SetMaxClientSpeed(move:GetMaxClientSpeed() * 0.95)
 		end
 	elseif pl:CallZombieFunction("Move", move) then
 		return

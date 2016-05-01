@@ -261,15 +261,31 @@ GM:AddPointShopItem("detpck", "Detonation Pack", nil, ITEMCAT_OTHER, 70, "weapon
 
 GM.SupplyDropItems = {}
 function GM:AddSupplyDropItem(signature,wave,points)
-	local item = {Signature = signature, Wave = wave, Points = points}
+	local item = {Signature = signature, Wave = wave}
 	self.SupplyDropItems[#self.SupplyDropItems + 1] = item	
 	return item
 end
 
-GM:AddSupplyDropItem("deagle",1,30)
-GM:AddSupplyDropItem("glock3",1,30)
-GM:AddSupplyDropItem("magnum",1,30)
-GM:AddSupplyDropItem("eraser",1,30)
+GM:AddSupplyDropItem("weapon_zs_deagle",1)
+GM:AddSupplyDropItem("weapon_zs_glock3",1)
+GM:AddSupplyDropItem("weapon_zs_magnum",1)
+GM:AddSupplyDropItem("weapon_zs_eraser",1)
+
+GM:AddSupplyDropItem("weapon_zs_uzi",2)
+GM:AddSupplyDropItem("weapon_zs_smg",2)
+GM:AddSupplyDropItem("weapon_zs_bulletstorm",2)
+GM:AddSupplyDropItem("weapon_zs_hunter",2)
+
+GM:AddSupplyDropItem("weapon_zs_reaper",3)
+GM:AddSupplyDropItem("weapon_zs_akbar",3)
+GM:AddSupplyDropItem("weapon_zs_ender",3)
+GM:AddSupplyDropItem("weapon_zs_m4",3)
+GM:AddSupplyDropItem("weapon_zs_annabelle",3)
+
+GM:AddSupplyDropItem("weapon_zs_inferno",4)
+GM:AddSupplyDropItem("weapon_zs_silencer",4)
+GM:AddSupplyDropItem("weapon_zs_sweepershotgun",4)
+GM:AddSupplyDropItem("weapon_zs_slugrifle",4)
 
 CLASS_COMMANDO = 1
 CLASS_SUPPORT = 2
@@ -288,6 +304,11 @@ ITEMCAT_AMMO = 2
 ITEMCAT_TOOLS = 3
 ITEMCAT_PERKS = 4
 
+LIMIT_XP = 20
+LIMIT_SCRAP = 100
+
+LAST_CANISTER_DROP = 0
+
 GM.ClassItemCategories = {
 	[ITEMCAT_WEAPONS] = "Weapons",
 	[ITEMCAT_AMMO] = "Ammunition",
@@ -296,51 +317,62 @@ GM.ClassItemCategories = {
 }
 
 GM.ClassItems = {}
-function GM:AddClassItem(signature,name,swep,worth,class,itemType,callback,xp,desc,model)
-	local item = {Signature = signature, Name = name, SWEP = swep, Worth = worth, Class = class, ItemType = itemType, Callback = callback, XP = xp, Description = desc, Model = model}
+function GM:AddClassItem(signature,name,swep,worth,class,itemType,callback,xp,desc,model,scrap)
+	local item = {Signature = signature, Name = name, SWEP = swep, Worth = worth, Class = class, ItemType = itemType, Callback = callback, XP = xp, Description = desc, Model = model, Scrap = scrap}
 	self.ClassItems[#self.ClassItems + 1] = item
 	return item
 end
 
 -- COMMANDO -- 
-GM:AddClassItem("p228","P228", "weapon_zs_peashooter", 30,  CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,5,nil,nil)
-GM:AddClassItem(nil,"USP", "weapon_zs_battleaxe", 30, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil)
-GM:AddClassItem("commando_mp7","MP7", "weapon_zs_tosser", 50, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,8,nil,nil)
-GM:AddClassItem(nil,"Famas", "weapon_zs_crackler", 50, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil)
-GM:AddClassItem("commando_ak47","AK-47", "weapon_zs_akbar", 70, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,15,nil,nil)
+GM:AddClassItem("scrap_p228","P228", "weapon_zs_peashooter", 30,  CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil,20)
+GM:AddClassItem(nil,"USP", "weapon_zs_battleaxe", 30, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
+GM:AddClassItem("commando_mp7","MP7", "weapon_zs_tosser", 40, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,8,nil,nil,nil)
+GM:AddClassItem(nil,"Famas", "weapon_zs_crackler", 50, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
+GM:AddClassItem("commando_ak47","AK-47", "weapon_zs_akbar", 70, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,15,nil,nil,nil)
 
 GM:AddClassItem("commando_vitality_1","Vitality I", nil, 20, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 10)) pl:SetHealth(pl:GetMaxHealth()) end,nil,"+10 Maximum Health",nil)
 GM:AddClassItem("commando_vitality_2","Vitality II", nil, 25, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 15)) pl:SetHealth(pl:GetMaxHealth()) end,6,"+15 Maximum Health",nil)
 GM:AddClassItem("commando_vitality_3","Vitality III", nil, 30, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 20)) pl:SetHealth(pl:GetMaxHealth()) end,12,"+20 Maximum Health",nil)
 
 GM:AddClassItem(nil,"Grenade", "weapon_zs_grenade", 40,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil)
+GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/weapons/w_eq_flashbang_thrown.mdl",100)
 
-GM:AddClassItem(nil, "pistol ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl")
-GM:AddClassItem(nil, "smg ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["smg1"] or 30, "smg1", true) end,nil,nil,"models/Items/BoxMRounds.mdl")
-GM:AddClassItem(nil, "assault rifle ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["ar2"] or 30, "ar2", true) end,nil,nil,"models/Items/357ammobox.mdl")
-GM:AddClassItem(nil, "shotgun ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["buckshot"] or 8, "buckshot", true) end,nil,nil,"models/Items/BoxBuckshot.mdl")
 
-GM:AddClassItem("smg_3", "3 smg ammo boxes", nil, 20, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["smg1"] or 30) * 3, "smg1", true) end,4,nil,"models/Items/BoxMRounds.mdl")
-GM:AddClassItem("ar2_3", "3 assault rifle ammo boxes", nil, 20, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["ar2"] or 30) * 3, "ar2", true) end,4,nil,"models/Items/357ammobox.mdl")
-GM:AddClassItem("pistol_3", "3 pistol ammo boxes", nil, 20, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["pistol"] or 12) * 3, "pistol", true) end,3,nil,"models/Items/BoxSRounds.mdl")
-GM:AddClassItem("buckshot_3", "3 shotgun ammo boxes", nil, 20, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["buckshot"] or 8) * 3, "buckshot", true) end,4,nil,"models/Items/BoxBuckshot.mdl")
+GM:AddClassItem(nil, "pistol ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",nil)
+GM:AddClassItem(nil, "smg ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["smg1"] or 30, "smg1", true) end,nil,nil,"models/Items/BoxMRounds.mdl",nil)
+GM:AddClassItem(nil, "assault rifle ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["ar2"] or 30, "ar2", true) end,nil,nil,"models/Items/357ammobox.mdl",nil)
+GM:AddClassItem(nil, "shotgun ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["buckshot"] or 8, "buckshot", true) end,nil,nil,"models/Items/BoxBuckshot.mdl",nil)
+GM:AddClassItem("scrap_smg_3", "3 smg ammo boxes", nil, 20, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["smg1"] or 30) * 3, "smg1", true) end,nil,nil,"models/Items/BoxMRounds.mdl",20)
+GM:AddClassItem("scrap_ar2_3", "3 assault rifle ammo boxes", nil, 20, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["ar2"] or 30) * 3, "ar2", true) end,nil,nil,"models/Items/357ammobox.mdl",20)
+GM:AddClassItem("scrap_pistol_3", "3 pistol ammo boxes", nil, 20, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["pistol"] or 12) * 3, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",20)
+GM:AddClassItem("scrap_buckshot_3", "3 shotgun ammo boxes", nil, 20, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["buckshot"] or 8) * 3, "buckshot", true) end,nil,nil,"models/Items/BoxBuckshot.mdl",20)
 
 
 -- SUPPORT -- 
-GM:AddClassItem("p228","P228", "weapon_zs_peashooter", 30,  CLASS_SUPPORT,ITEMCAT_WEAPONS,nil,5,nil,nil)
-GM:AddClassItem(nil,"USP", "weapon_zs_battleaxe", 30, CLASS_SUPPORT,ITEMCAT_WEAPONS,nil,nil,nil,nil)
-GM:AddClassItem(nil,"Mac 10", "weapon_zs_uzi", 40,  CLASS_SUPPORT,ITEMCAT_WEAPONS,nil,nil,nil,nil)
-GM:AddClassItem("support_mp5","MP5", "weapon_zs_smg", 50,  CLASS_SUPPORT,ITEMCAT_WEAPONS,nil,5,nil,nil)
-GM:AddClassItem(nil,"Shorty", "weapon_zs_blaster", 50,  CLASS_SUPPORT,ITEMCAT_WEAPONS,nil,nil,nil,nil)
-GM:AddClassItem(nil,"Carpenter's Hammer", "weapon_zs_hammer", 20,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,nil,nil,nil)
+GM:AddClassItem("scrap_p228","P228", "weapon_zs_peashooter", 30,  CLASS_SUPPORT,ITEMCAT_WEAPONS,nil,nil,nil,nil,20)
+GM:AddClassItem(nil,"USP", "weapon_zs_battleaxe", 30, CLASS_SUPPORT,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
+GM:AddClassItem(nil,"Mac 10", "weapon_zs_uzi", 40,  CLASS_SUPPORT,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
+GM:AddClassItem("support_mp5","MP5", "weapon_zs_smg", 50,  CLASS_SUPPORT,ITEMCAT_WEAPONS,nil,5,nil,nil,nil)
+GM:AddClassItem(nil,"Shorty", "weapon_zs_blaster", 50,  CLASS_SUPPORT,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
+GM:AddClassItem(nil,"Carpenter's Hammer", "weapon_zs_hammer", 30,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
+
+GM:AddClassItem(nil, "pistol ammo box", nil, 10, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",nil)
+GM:AddClassItem(nil, "smg ammo box", nil, 10, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["smg1"] or 30, "smg1", true) end,nil,nil,"models/Items/BoxMRounds.mdl",nil)
+GM:AddClassItem(nil, "shotgun ammo box", nil, 10, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["buckshot"] or 8, "buckshot", true) end,nil,nil,"models/Items/BoxBuckshot.mdl",nil)
+GM:AddClassItem("scrap_smg_3", "3 smg ammo boxes", nil, 20, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["smg1"] or 30) * 3, "smg1", true) end,nil,nil,"models/Items/BoxMRounds.mdl",20)
+GM:AddClassItem("scrap_pistol_3", "3 pistol ammo boxes", nil, 20, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["pistol"] or 12) * 3, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",20)
+GM:AddClassItem("scrap_buckshot_3", "3 shotgun ammo boxes", nil, 20, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["buckshot"] or 8) * 3, "buckshot", true) end,nil,nil,"models/Items/BoxBuckshot.mdl",20)
+
+GM:AddClassItem(nil,"Box of 12 nails", nil, 10,  CLASS_SUPPORT,ITEMCAT_TOOLS,function(pl) pl:GiveAmmo(12, "GaussEnergy", true) end,nil,nil,"models/Items/BoxMRounds.mdl",nil)
+GM:AddClassItem("support_nails","Box of 24 nails", nil, 15,  CLASS_SUPPORT,ITEMCAT_TOOLS,function(pl) pl:GiveAmmo(24, "GaussEnergy", true) end,5,nil,"models/Items/BoxMRounds.mdl",nil)
+GM:AddClassItem(nil,"Pack of boards", "weapon_zs_boardpack", 20,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
+GM:AddClassItem(nil,"Message beacon", "weapon_zs_messagebeacon", 5,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
+GM:AddClassItem("support_spotlamp","Spot lamp", "weapon_zs_spotlamp", 10,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,5,nil,nil,nil)
 
 
-GM:AddClassItem(nil, "pistol ammo box", nil, 10, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl")
-GM:AddClassItem(nil, "smg ammo box", nil, 10, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["smg1"] or 30, "smg1", true) end,nil,nil,"models/Items/BoxMRounds.mdl")
-GM:AddClassItem(nil, "shotgun ammo box", nil, 10, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["buckshot"] or 8, "buckshot", true) end,nil,nil,"models/Items/BoxBuckshot.mdl")
-GM:AddClassItem("smg_3", "3 smg ammo boxes", nil, 20, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["smg1"] or 30) * 3, "smg1", true) end,4,nil,"models/Items/BoxMRounds.mdl")
-GM:AddClassItem("pistol_3", "3 pistol ammo boxes", nil, 20, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["pistol"] or 12) * 3, "pistol", true) end,3,nil,"models/Items/BoxSRounds.mdl")
-GM:AddClassItem("buckshot_3", "3 shotgun ammo boxes", nil, 20, CLASS_SUPPORT, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["buckshot"] or 8) * 3, "buckshot", true) end,4,nil,"models/Items/BoxBuckshot.mdl")
+
+
+
 
 
 -- GLOBAL --
@@ -431,7 +463,7 @@ cvars.AddChangeCallback("zs_waveonezombies", function(cvar, oldvalue, newvalue)
 	GAMEMODE.WaveOneZombies = math.ceil(100 * (tonumber(newvalue) or 1)) * 0.01
 end)
 
-GM.NumberOfWaves = CreateConVar("zs_numberofwaves", "6", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "Number of waves in a game."):GetInt()
+GM.NumberOfWaves = CreateConVar("zs_numberofwaves", "4", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "Number of waves in a game."):GetInt()
 cvars.AddChangeCallback("zs_numberofwaves", function(cvar, oldvalue, newvalue)
 	GAMEMODE.NumberOfWaves = tonumber(newvalue) or 1
 end)
@@ -464,7 +496,7 @@ end)
 -- Static values that don't need convars...
 
 -- Initial length for wave 1.
-GM.WaveOneLength = 220
+GM.WaveOneLength = 180
 
 -- For Classic Mode
 GM.WaveOneLengthClassic = 120
@@ -482,10 +514,10 @@ GM.NoNewHumansWave = 2
 GM.NoSuicideWave = 1
 
 -- How long 'wave 0' should last in seconds. This is the time you should give for new players to join and get ready.
-GM.WaveZeroLength = 200
+GM.WaveZeroLength = 120
 
 -- Time humans have between waves to do stuff without NEW zombies spawning. Any dead zombies will be in spectator (crow) view and any living ones will still be living.
-GM.WaveIntermissionLength = 90
+GM.WaveIntermissionLength = 65
 
 -- For Classic Mode
 GM.WaveIntermissionLengthClassic = 20
@@ -494,7 +526,7 @@ GM.WaveIntermissionLengthClassic = 20
 GM.EndGameTime = 60
 
 -- How many clips of ammo guns from the Worth menu start with. Some guns such as shotguns and sniper rifles have multipliers on this.
-GM.SurvivalClips = 2
+GM.SurvivalClips = 3
 
 -- Put your unoriginal, 5MB Rob Zombie and Metallica music here.
 GM.LastHumanSound = Sound("zombiesurvival/lasthuman.ogg")

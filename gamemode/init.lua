@@ -378,6 +378,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("zs_lifestatshd")
 	util.AddNetworkString("zs_lifestatsbe")
 	util.AddNetworkString("zs_boss_spawned")
+	util.AddNetworkString("zs_flaregun_dropped")
 	util.AddNetworkString("zs_commission")
 	util.AddNetworkString("zs_healother")
 	util.AddNetworkString("zs_repairobject")
@@ -3063,6 +3064,15 @@ function GM:DoPlayerDeath(pl, attacker, dmginfo)
 	local revive
 	local assistpl
 	if plteam == TEAM_UNDEAD then
+	
+		if pl:GetZombieClassTable().Boss then
+			pl:DropFlareGun()
+			
+			if not silent then
+				net.Start("zs_flaregun_dropped")
+				net.Broadcast()
+			end
+		end
 		local classtable = pl:GetZombieClassTable()
 
 		pl:PlayZombieDeathSound()

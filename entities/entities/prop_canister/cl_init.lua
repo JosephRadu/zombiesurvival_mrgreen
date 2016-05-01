@@ -2,14 +2,16 @@ include('shared.lua')
 
 ENT.SpawnTime = 0
 
-Used = false
-
-
+local Used = false
+local Wave = 0
+local SpawnTime = 0
 
 function ENT:Initialize()
-	self.SpawnTime = CurTime()
+	EntSpawnTime = math.Round(CurTime())
 	self:DestroyShadow() 
+	Wave = GAMEMODE:GetWave()
 	Used = false
+
 end
 
 local vOffset = Vector(84, 0, 6)
@@ -29,17 +31,14 @@ function ENT:Draw()
 		local ang = self:LocalToWorldAngles(aOffset)
 		
 		self:RenderInfo(self:LocalToWorld(vOffset), ang, owner)
-
-
 	end
 end
-
 
 function ENT:RenderInfo(pos, ang, owner)
 	cam.Start3D2D(pos, ang, 0.075)
 		draw.RoundedBox(0, -225, -50, 460, 100, color_black_alpha90)
 		draw.SimpleText(translate.Get("supply_drop"), "ZS3D2DFont2", 0, 0, COLOR_GREEN, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-		if not Used then
+		if not Used and Wave != 0 then
 			draw.SimpleText("(USE) WEAPON AVAILABLE", "ZS3D2DFont2Small", 0, 100, COLOR_BLUE, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
 		end
 	cam.End3D2D()
@@ -49,7 +48,7 @@ function ENT:RenderInfo(pos, ang, owner)
 	cam.Start3D2D(pos, ang, 0.075)
 		draw.RoundedBox(0, -225, -50, 460, 100, color_black_alpha90)
 		draw.SimpleText(translate.Get("supply_drop"), "ZS3D2DFont2", 0, 0, COLOR_GREEN, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-		if not Used then
+		if not Used and Wave != 0 then
 			draw.SimpleText("(USE) WEAPON AVAILABLE", "ZS3D2DFont2Small", 0, 100, COLOR_BLUE, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
 		end
 	cam.End3D2D()

@@ -22,6 +22,14 @@ function meta:SetClass(class)
 	self.CurrentClass = class
 end
 
+function meta:GetScrap()
+	return self.Scrap
+end
+
+function meta:GiveScrap(amount)
+	self.Scrap = math.Clamp(self.Scrap + amount,0,LIMIT_SCRAP)
+end
+
 function meta:GiveXP( amount , class )
 	
 	local curClass = self.CurrentClass
@@ -30,13 +38,13 @@ function meta:GiveXP( amount , class )
 	end
 	
 	if (curClass == 'commando') then
-		self.XP_Commando = self.XP_Commando + amount
+		self.XP_Commando = math.Clamp(self.XP_Commando + amount,0,LIMIT_XP)
 	elseif (curClass == 'support') then
-		self.XP_Support = self.XP_Support + amount
+		self.XP_Support = math.Clamp(self.XP_Support + amount,0,LIMIT_XP)
 	elseif (curClass == 'engineer') then
-		self.XP_Engineer = self.XP_Engineer + amount
+		self.XP_Engineer = math.Clamp(self.XP_Engineer + amount,0,LIMIT_XP)
 	elseif (curClass == 'berserker') then
-		self.XP_Berserker = self.XP_Berserker + amount
+		self.XP_Berserker = math.Clamp(self.XP_Berserker + amount,0,LIMIT_XP)
 	end
 
 	--GAMEMODE:UpdatePlayerStats( self, self.m_CurentXP )

@@ -1820,6 +1820,10 @@ net.Receive("zs_boss_spawned", function(length)
 	hook.Add("HUDPaint", "BossSpawnedPaint", BossSpawnedPaint)
 end)
 
+net.Receive("zs_flaregun_dropped", function()
+	GAMEMODE:CenterNotify({killicon = "default"}, " ", COLOR_CYAN, "A Flare Gun has dropped!", {killicon = "default"})
+end)
+
 net.Receive("zs_centernotify", function(length)
 	local tab = net.ReadTable()
 

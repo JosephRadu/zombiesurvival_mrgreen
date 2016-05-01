@@ -103,6 +103,8 @@ function SWEP:Deploy()
 	gamemode.Call("WeaponDeployed", self.Owner, self)
 	self:SetIronsights(false)
 
+	self.Owner:GiveAmmo(1, self.Secondary.Ammo, true)
+	
 	if self.PreHolsterClip1 then
 		local diff = self:Clip1() - self.PreHolsterClip1
 		self:SetClip1(self.PreHolsterClip1)
