@@ -99,11 +99,14 @@ local function SetClass(class)
 		classString = "support"
 	elseif class == CLASS_ENGINEER then
 		classString = "engineer"	
+	elseif class == CLASS_BERSERKER then
+		classString = "berserker"			
 	end
 
 	RunConsoleCommand("setClass", classString)
 end
 
+local classSelected = nil
 
 local function Checkout(tobuy)
 	local classSelected = nil
@@ -169,6 +172,10 @@ end
 local function LoadCart(cartid, silent)
 	if GAMEMODE.SavedCarts[cartid] then
 		MakepWorth()
+		
+		PrintTable(classButton)
+		classButton[GAMEMODE.SavedCarts[cartid][3]]:DoClick()
+		
 		for _, id in pairs(GAMEMODE.SavedCarts[cartid][2]) do
 			for __, btn in pairs(WorthButtons) do
 				if btn and (btn.ID == id or GAMEMODE.ClassItems[id] and GAMEMODE.ClassItems[id].Class == btn.ID) then
@@ -176,6 +183,9 @@ local function LoadCart(cartid, silent)
 				end
 			end
 		end
+		
+		
+		
 		if not silent then
 			surface.PlaySound("buttons/combine_button1.wav")
 		end
@@ -193,11 +203,12 @@ local function SaveCurrentCart(name)
 			table.insert(tobuy, btn.ID)
 		end
 	end
+
 	for i, cart in ipairs(GAMEMODE.SavedCarts) do
 		if string.lower(cart[1]) == string.lower(name) then
 			cart[1] = name
 			cart[2] = tobuy
-
+			cart[3] = classSelected
 			file.Write(GAMEMODE.CartFile, Serialize(GAMEMODE.SavedCarts))
 			print("Saved cart "..tostring(name))
 
@@ -206,7 +217,7 @@ local function SaveCurrentCart(name)
 		end
 	end
 
-	GAMEMODE.SavedCarts[#GAMEMODE.SavedCarts + 1] = {name, tobuy}
+	GAMEMODE.SavedCarts[#GAMEMODE.SavedCarts + 1] = {name, tobuy, classSelected}
 
 	file.Write(GAMEMODE.CartFile, Serialize(GAMEMODE.SavedCarts))
 	print("Saved cart "..tostring(name))
@@ -241,7 +252,7 @@ function MakepWorth()
 		pWorth:Remove()
 		pWorth = nil
 	end
-	
+
 	local maxworth = GAMEMODE.StartingWorth
 	WorthRemaining = maxworth
 
@@ -263,93 +274,10 @@ function MakepWorth()
 	local panhei = 40
 
 	local defaultcart = cvarDefaultCart:GetString()
-	
-	--[[
-	local list = vgui.Create("DPanelList", itemFrame)
-	itemFrame:AddSheet("Favorites", list, "icon16/heart.png", false, false)
-	list:EnableVerticalScrollbar(true)
-	list:SetWide(itemFrame:GetWide() - 16)
-	list:SetSpacing(2)
-	list:SetPadding(2)
-
-	local savebutton = EasyButton(nil, "Save the current cart", 0, 10)
-	savebutton.DoClick = SaveDoClick
-	list:AddItem(savebutton)
-	
-	for i, savetab in ipairs(GAMEMODE.SavedCarts) do
-		local cartpan = vgui.Create("DEXRoundedPanel")
-		cartpan:SetCursor("pointer")
-		cartpan:SetSize(list:GetWide(), panhei)
-
-		local cartname = savetab[1]
-
-		local x = 8
-
-		if defaultcart == cartname then
-			local defimage = vgui.Create("DImage", cartpan)
-			defimage:SetImage("icon16/heart.png")
-			defimage:SizeToContents()
-			defimage:SetMouseInputEnabled(true)
-			defimage:SetTooltip("This is your default cart.\nIf you join the game late then you'll spawn with this cart.")
-			defimage:SetPos(x, cartpan:GetTall() * 0.5 - defimage:GetTall() * 0.5)
-			x = x + defimage:GetWide() + 4
-		end
-
-		local cartnamelabel = EasyLabel(cartpan, cartname, panfont)
-		cartnamelabel:SetPos(x, cartpan:GetTall() * 0.5 - cartnamelabel:GetTall() * 0.5)
-
-		x = cartpan:GetWide() - 20
-
-		local checkbutton = vgui.Create("DImageButton", cartpan)
-		checkbutton:SetImage("icon16/accept.png")
-		checkbutton:SizeToContents()
-		checkbutton:SetTooltip("Purchase this saved cart.")
-		x = x - checkbutton:GetWide() - 8
-		checkbutton:SetPos(x, cartpan:GetTall() * 0.5 - checkbutton:GetTall() * 0.5)
-		checkbutton.ID = i
-		checkbutton.DoClick = QuickCheckDoClick
-
-		local loadbutton = vgui.Create("DImageButton", cartpan)
-		loadbutton:SetImage("icon16/folder_go.png")
-		loadbutton:SizeToContents()
-		loadbutton:SetTooltip("Load this saved cart.")
-		x = x - loadbutton:GetWide() - 8
-		loadbutton:SetPos(x, cartpan:GetTall() * 0.5 - loadbutton:GetTall() * 0.5)
-		loadbutton.ID = i
-		loadbutton.DoClick = LoadDoClick
-
-		local defaultbutton = vgui.Create("DImageButton", cartpan)
-		defaultbutton:SetImage("icon16/heart.png")
-		defaultbutton:SizeToContents()
-		if cartname == defaultcart then
-			defaultbutton:SetTooltip("Remove this cart as your default.")
-		else
-			defaultbutton:SetTooltip("Make this cart your default.")
-		end
-		x = x - defaultbutton:GetWide() - 8
-		defaultbutton:SetPos(x, cartpan:GetTall() * 0.5 - defaultbutton:GetTall() * 0.5)
-		defaultbutton.Name = cartname
-		defaultbutton.DoClick = DefaultDoClick
-
-		local deletebutton = vgui.Create("DImageButton", cartpan)
-		deletebutton:SetImage("icon16/bin.png")
-		deletebutton:SizeToContents()
-		deletebutton:SetTooltip("Delete this saved cart.")
-		x = x - deletebutton:GetWide() - 8
-		deletebutton:SetPos(x, cartpan:GetTall() * 0.5 - loadbutton:GetTall() * 0.5)
-		deletebutton.ID = i
-		deletebutton.DoClick = DeleteDoClick
-
-		list:AddItem(cartpan)
-	end
-	
-	]]--
 	local classPanel = {}
-		
 		
 	for classid, classname in ipairs(GAMEMODE.Classes) do
 		local xpAmount = (XP[classid] or 0)
-			
 		classButton[classid] = vgui.Create( "DButton", propertysheet )
 		classButton[classid]:SetText(classname .. "\n" .. xpAmount .. "/" .. LIMIT_XP .. " XP" )
 		classButton[classid]:AlignLeft()
@@ -376,15 +304,99 @@ function MakepWorth()
 		classPanel[classid]:SetPos(216,26)
 		classPanel[classid]:SetVisible(false)
 		
+
+		if classButton[classid].Class == classSelected then
+			classPanel[classid]:SetVisible(true)		
+		end
+		
 		classPanel[classid]:SetBackgroundColor(Color(255,255,255,255))
 		classPanel[classid]:SetAlpha(255)
-		
 		
 		local classSheet = vgui.Create("DPropertySheet",classPanel[classid])
 		classSheet:SetSize(wid * 0.67, hei * 0.8)
 		classSheet:SetKeyboardInputEnabled(false)
 		classSheet:SetPos(0,0)		
 		classSheet.Paint = function() end
+		
+		local list = vgui.Create("DPanelList", classSheet)
+		classSheet:AddSheet("Favorites", list, "icon16/heart.png", false, false)
+		list:EnableVerticalScrollbar(true)
+		list:SetWide(classSheet:GetWide() - 16)
+		list:SetSpacing(2)
+		list:SetPadding(2)
+
+		local savebutton = EasyButton(nil, "Save the current cart", 0, 10)
+		savebutton.DoClick = SaveDoClick
+		list:AddItem(savebutton)		
+		
+		for i, savetab in ipairs(GAMEMODE.SavedCarts) do
+			if savetab[3] != classButton[classid].Class then continue end
+		
+			local cartpan = vgui.Create("DEXRoundedPanel")
+			cartpan:SetCursor("pointer")
+			cartpan:SetSize(list:GetWide(), panhei)
+
+			local cartname = savetab[1]
+
+			local x = 8
+
+			if defaultcart == cartname then
+				local defimage = vgui.Create("DImage", cartpan)
+				defimage:SetImage("icon16/heart.png")
+				defimage:SizeToContents()
+				defimage:SetMouseInputEnabled(true)
+				defimage:SetTooltip("This is your default cart.\nIf you join the game late then you'll spawn with this cart.")
+				defimage:SetPos(x, cartpan:GetTall() * 0.5 - defimage:GetTall() * 0.5)
+				x = x + defimage:GetWide() + 4
+			end
+
+			local cartnamelabel = EasyLabel(cartpan, cartname, panfont)
+			cartnamelabel:SetPos(x, cartpan:GetTall() * 0.5 - cartnamelabel:GetTall() * 0.5)
+
+			x = cartpan:GetWide() - 20
+
+			local checkbutton = vgui.Create("DImageButton", cartpan)
+			checkbutton:SetImage("icon16/accept.png")
+			checkbutton:SizeToContents()
+			checkbutton:SetTooltip("Purchase this saved cart.")
+			x = x - checkbutton:GetWide() - 8
+			checkbutton:SetPos(x, cartpan:GetTall() * 0.5 - checkbutton:GetTall() * 0.5)
+			checkbutton.ID = i
+			checkbutton.DoClick = QuickCheckDoClick
+
+			local loadbutton = vgui.Create("DImageButton", cartpan)
+			loadbutton:SetImage("icon16/folder_go.png")
+			loadbutton:SizeToContents()
+			loadbutton:SetTooltip("Load this saved cart.")
+			x = x - loadbutton:GetWide() - 8
+			loadbutton:SetPos(x, cartpan:GetTall() * 0.5 - loadbutton:GetTall() * 0.5)
+			loadbutton.ID = i
+			loadbutton.DoClick = LoadDoClick
+
+			local defaultbutton = vgui.Create("DImageButton", cartpan)
+			defaultbutton:SetImage("icon16/heart.png")
+			defaultbutton:SizeToContents()
+			if cartname == defaultcart then
+				defaultbutton:SetTooltip("Remove this cart as your default.")
+			else
+				defaultbutton:SetTooltip("Make this cart your default.")
+			end
+			x = x - defaultbutton:GetWide() - 8
+			defaultbutton:SetPos(x, cartpan:GetTall() * 0.5 - defaultbutton:GetTall() * 0.5)
+			defaultbutton.Name = cartname
+			defaultbutton.DoClick = DefaultDoClick
+
+			local deletebutton = vgui.Create("DImageButton", cartpan)
+			deletebutton:SetImage("icon16/bin.png")
+			deletebutton:SizeToContents()
+			deletebutton:SetTooltip("Delete this saved cart.")
+			x = x - deletebutton:GetWide() - 8
+			deletebutton:SetPos(x, cartpan:GetTall() * 0.5 - loadbutton:GetTall() * 0.5)
+			deletebutton.ID = i
+			deletebutton.DoClick = DeleteDoClick
+
+			list:AddItem(cartpan)
+		end		
 		
 		for classcategoryid, classcategory in ipairs(GAMEMODE.ClassItemCategories) do
 			local list = vgui.Create("DPanelList", classSheet)
@@ -410,10 +422,14 @@ function MakepWorth()
 		end
 
 		classButton[classid].DoClick = function()
+		
+		classSelected = classButton[classid].Class
+		
 			for k,v in pairs (classButton) do
 				v.Active = false
 			end
 		classButton[classid].Active = true
+		
 			surface.PlaySound("ui/buttonclick.wav")
 			for k, v in pairs (classPanel) do
 				v:SetVisible(false)
@@ -461,10 +477,6 @@ function MakepWorth()
 	clearbutton:AlignRight(8)
 	clearbutton:MoveAbove(randombutton, 8)
 	clearbutton.DoClick = ClearCartDoClick
-
-	--if #GAMEMODE.SavedCarts == 0 then
-	--	propertysheet:SetActiveTab(propertysheet.ClassItems[math.min(2, #propertysheet.ClassItems)].Tab)
-	--end
 
 	frame:Center()
 	frame:SetAlpha(0)

@@ -805,9 +805,9 @@ function GM:RequestedDefaultCart()
 	local defaultcart = GetConVarString("zs_defaultcart")
 	if #defaultcart > 0 then
 		defaultcart = string.lower(defaultcart)
-
 		for i, carttab in ipairs(self.SavedCarts) do
 			if carttab[1] and string.lower(carttab[1]) == defaultcart then
+				RunConsoleCommand("setclass",carttab[3])		
 				gamemode.Call("SuppressArsenalUpgrades", 1)
 				RunConsoleCommand("worthcheckout", unpack(carttab[2]))
 
