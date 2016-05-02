@@ -41,15 +41,15 @@ function GM:GetBlankStats( pl )
 			[ 'engineer' ] = 0,
 			[ 'berserker' ] = 0
 		},
-		[ 'scrap' ] = 0
+		[ 'scrap' ] = 20
 	}
-		
-		
+
 	pl.XP_Commando = 0
 	pl.XP_Support = 0
 	pl.XP_Engineer = 0
 	pl.XP_Berserker = 0
-	pl.Scrap = 0		
+	pl.Scrap = 20		
+
 	return data
 end
 

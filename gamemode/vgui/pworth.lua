@@ -172,19 +172,15 @@ end
 local function LoadCart(cartid, silent)
 	if GAMEMODE.SavedCarts[cartid] then
 		MakepWorth()
-		
-		PrintTable(classButton)
+
 		classButton[GAMEMODE.SavedCarts[cartid][3]]:DoClick()
-		
 		for _, id in pairs(GAMEMODE.SavedCarts[cartid][2]) do
 			for __, btn in pairs(WorthButtons) do
 				if btn and (btn.ID == id or GAMEMODE.ClassItems[id] and GAMEMODE.ClassItems[id].Class == btn.ID) then
-					btn:DoClick(true, true)
+					btn:DoClick(true, true, true)
 				end
 			end
 		end
-		
-		
 		
 		if not silent then
 			surface.PlaySound("buttons/combine_button1.wav")
@@ -304,11 +300,6 @@ function MakepWorth()
 		classPanel[classid]:SetPos(216,26)
 		classPanel[classid]:SetVisible(false)
 		
-
-		if classButton[classid].Class == classSelected then
-			classPanel[classid]:SetVisible(true)		
-		end
-		
 		classPanel[classid]:SetBackgroundColor(Color(255,255,255,255))
 		classPanel[classid]:SetAlpha(255)
 		
@@ -422,13 +413,12 @@ function MakepWorth()
 		end
 
 		classButton[classid].DoClick = function()
-		
-		classSelected = classButton[classid].Class
+			classSelected = classButton[classid].Class
 		
 			for k,v in pairs (classButton) do
 				v.Active = false
 			end
-		classButton[classid].Active = true
+			classButton[classid].Active = true
 		
 			surface.PlaySound("ui/buttonclick.wav")
 			for k, v in pairs (classPanel) do
@@ -444,14 +434,21 @@ function MakepWorth()
 				end
 			end
 		end
-		
+
 	end
 
+	for k,v in pairs (classButton) do
+		if v.Class == classSelected then
+			v:SetVisible(true)		
+			v:DoClick()
+		end
+	end
+			
 	local worthlab = EasyLabel(frame, "Worth: "..tostring(WorthRemaining), "ZSHUDFontSmall", COLOR_LIMEGREEN)
 	worthlab:SetPos(8, frame:GetTall() - worthlab:GetTall() - 8)
 	frame.WorthLab = worthlab
 	
-	local scraplab = EasyLabel(frame, (" Scrap: ".. SCRAP .."/100"), "ZSHUDFontSmall", COLOR_DARKGREEN)
+	local scraplab = EasyLabel(frame, (" Scrap: ".. SCRAP .."/"..LIMIT_SCRAP), "ZSHUDFontSmall", COLOR_DARKGREEN)
 	scraplab:SetPos(8, frame:GetTall() - scraplab:GetTall() - 48)
 	frame.ScrapLab = scraplab
 
@@ -623,14 +620,14 @@ end
 local function UnlockItem(tab,self)
 	surface.PlaySound("buttons/button9.wav")
 	Derma_Query("Unlock " .. tostring(tab.Name) .. " for " .. tostring(tab.XP) .. " XP?","",
-	"Yes",function() if XP[tab.Class] != nil and XP[tab.Class] or 0 >= tab.XP then RunConsoleCommand("unlockitem", tab.Signature, tab.XP) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf xp", "", ":(" ) end end,
+	"Yes",function() if XP[tab.Class] != nil and XP[tab.Class] >= tab.XP then RunConsoleCommand("unlockitem", tab.Signature, tab.XP) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf xp", "", ":(" ) end end,
 	"No", function() return end) 
 end
 
 local function UnlockScrapItem(tab,self)
 	surface.PlaySound("buttons/button9.wav")
 	Derma_Query("Unlock " .. tostring(tab.Name) .. " for " .. tostring(tab.Scrap) .. " Scrap?","",
-	"Yes",function() if SCRAP != nil and SCRAP or 0 >= tab.Scrap then RunConsoleCommand("unlockscrapitem", tab.Signature, tab.Scrap) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf scrap", "", ":(" ) end end,
+	"Yes",function() if SCRAP != nil and SCRAP >= tab.Scrap then RunConsoleCommand("unlockscrapitem", tab.Signature, tab.Scrap) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf scrap", "", ":(" ) end end,
 	"No", function() return end) 
 	pScrap.ScrapLab:SetText(" Scrap: ".. SCRAP .."/" .. LIMIT_SCRAP)	
 end
@@ -647,19 +644,18 @@ function PANEL:Paint(w, h)
 	draw.RoundedBox(4, 4, 4, w - 8, h - 8, color_black)
 end
 
-function PANEL:DoClick(silent, force)
+function PANEL:DoClick(silent, force, auto)
 	local id = self.ID
 	local tab = FindStartingItem(id)
 	
 	if not tab then return end
 
-
-	if tab.XP and not tab.Unlocked then
+	if tab.XP and not tab.Unlocked and not auto then
 		UnlockItem(tab,self)
 		return
 	end
 	
-	if tab.Scrap and not tab.Unlocked then
+	if tab.Scrap and not tab.Unlocked and not auto then
 		UnlockScrapItem(tab,self)
 		return
 	end

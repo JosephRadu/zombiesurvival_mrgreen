@@ -9,7 +9,7 @@ GM.ZombieEscapeWeapons = {
 
 -- Change this if you plan to alter the cost of items or you severely change how Worth works.
 -- Having separate cart files allows people to have separate loadouts for different servers.
-GM.CartFile = "zscarts.txt"
+GM.CartFile = "zscarts_pufulet.txt"
 
 ITEMCAT_GUNS = 1
 ITEMCAT_AMMO = 2
@@ -305,7 +305,7 @@ ITEMCAT_TOOLS = 3
 ITEMCAT_PERKS = 4
 
 LIMIT_XP = 20
-LIMIT_SCRAP = 100
+LIMIT_SCRAP = 90
 
 LAST_CANISTER_DROP = 0
 
@@ -335,7 +335,7 @@ GM:AddClassItem("commando_vitality_2","Vitality II", nil, 25, CLASS_COMMANDO,ITE
 GM:AddClassItem("commando_vitality_3","Vitality III", nil, 30, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 20)) pl:SetHealth(pl:GetMaxHealth()) end,12,"+20 Maximum Health",nil)
 
 GM:AddClassItem(nil,"Grenade", "weapon_zs_grenade", 40,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil)
-GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/weapons/w_eq_flashbang_thrown.mdl",100)
+GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/weapons/w_eq_flashbang_thrown.mdl",90)
 
 
 GM:AddClassItem(nil, "pistol ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",nil)
