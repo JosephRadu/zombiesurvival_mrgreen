@@ -1,7 +1,7 @@
 AddCSLuaFile()
 
 if CLIENT then
-	SWEP.PrintName = "'Supplier' Flare Gun"
+	SWEP.PrintName = "Flare Gun"
 	SWEP.Slot = 1
 	SWEP.SlotPos = 0
 	SWEP.ViewModelFlip = false

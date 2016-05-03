@@ -15,10 +15,10 @@ ENT.supplyCalled = false
 function ENT:Initialize()
 	self.DieTime = CurTime() + 24
 	self:SetModel("models/weapons/w_grenade.mdl")
-	self:PhysicsInit(SOLID_VPHYSICS )
-	self:SetSolid(SOLID_VPHYSICS)
+	self:PhysicsInit(COLLISION_GROUP_DEBRIS  )
+	self:SetSolid(COLLISION_GROUP_DEBRIS  )
 	self:SetMaterial("models/debug/debugwhite")
-	self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+	self:SetCollisionGroup( COLLISION_GROUP_DEBRIS   )
 
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then

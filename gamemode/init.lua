@@ -2951,7 +2951,19 @@ function GM:HumanKilledZombie(pl, attacker, inflictor, dmginfo, headshot, suicid
 			mostdamager = otherpl
 		end
 	end
+	if not suicide then
+		if pl:GetZombieClassTable().Boss then
+			pl:DropFlareGun()
+			if not silent then
+				net.Start("zs_flaregun_dropped")
+				net.Broadcast()
+			end
+		end
+		pl:DropLootAmmo(attacker)
+	end
+	
 
+	
 	attacker.ZombiesKilled = attacker.ZombiesKilled + 1
 
 	if mostdamager then
@@ -3064,15 +3076,6 @@ function GM:DoPlayerDeath(pl, attacker, dmginfo)
 	local revive
 	local assistpl
 	if plteam == TEAM_UNDEAD then
-	
-		if pl:GetZombieClassTable().Boss then
-			pl:DropFlareGun()
-			
-			if not silent then
-				net.Start("zs_flaregun_dropped")
-				net.Broadcast()
-			end
-		end
 		local classtable = pl:GetZombieClassTable()
 
 		pl:PlayZombieDeathSound()

@@ -92,7 +92,6 @@ if self.Active then return end
 			
 			for k,v in pairs(ents.GetAll()) do
 				if (v:GetClass() == "env_headcrabcanister") then
-					print(self:GetPos():Distance(v:GetPos()))
 					if self:GetPos():Distance(v:GetPos()) == 0 then
 						v:Remove()
 						self.Active = true

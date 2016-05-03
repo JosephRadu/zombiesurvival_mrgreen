@@ -899,3 +899,33 @@ function meta:DropFlareGun()
 		end
 	end
 end
+
+function meta:DropLootAmmo(attacker)
+	local ammotype
+	local wep = attacker:GetActiveWeapon()
+	if not wep:IsValid() then
+		ammotype = "pistol"
+	end
+
+	if not ammotype then
+		ammotype = wep:GetPrimaryAmmoTypeString()
+		if not GAMEMODE.AmmoResupply[ammotype] then
+			ammotype = "pistol"
+		end
+	end
+	
+	if math.random(1,20) == 1 then
+		ammotype = "alyxgun"
+	end
+
+	local pos = self:LocalToWorld(self:OBBCenter())
+	local ent = ents.Create("prop_ammo")
+	if ent:IsValid() then
+		ent:SetAmmoType(ammotype)
+		ent.PlacedInMap = true
+		ent:SetPos(pos)
+		ent:SetAngles(AngleRand())
+		ent:Spawn()
+		ent:SetAmmo(GAMEMODE.AmmoCache[ammotype] or 1)
+	end
+end

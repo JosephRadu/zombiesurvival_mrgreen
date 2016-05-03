@@ -17,9 +17,9 @@ SWEP.WorldModel	= ""
 
 SWEP.Damage = 5
 SWEP.UppercutDamageMultiplier = 3
-SWEP.HitDistance = 40
+SWEP.HitDistance = 42
 
-SWEP.ViewModelFOV = 52
+SWEP.ViewModelFOV = 56
 
 SWEP.AutoSwitchFrom = true
 
@@ -75,8 +75,8 @@ function SWEP:PrimaryAttack(right)
 	self:UpdateNextIdle()
 	self:SetNextMeleeAttack( CurTime() + 0.2 )
 	
-	self:SetNextPrimaryFire( CurTime() + 0.9 )
-	self:SetNextSecondaryFire( CurTime() + 0.9 )
+	self:SetNextPrimaryFire( CurTime() + 0.36 )
+	self:SetNextSecondaryFire( CurTime() + 0.36 )
 end
 
 function SWEP:SecondaryAttack()
