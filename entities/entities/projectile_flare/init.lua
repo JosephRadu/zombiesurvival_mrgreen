@@ -8,7 +8,6 @@ local ShootSoundFail = Sound( "WallHealth.Deny" )
 local YawIncrement = 20
 local PitchIncrement = 10
 
-ENT.dropPossible = true
 ENT.skyHit = false
 ENT.descending = false
 ENT.supplyCalled = false
@@ -26,10 +25,6 @@ function ENT:Initialize()
 		phys:Wake()
 		phys:SetMass(1.5)
 		phys:SetMaterial("metal")
-	end
-	
-	if LAST_CANISTER_DROP + 60 > CurTime() then
-		self.dropPossible = false
 	end
 end
 
@@ -54,14 +49,10 @@ function ENT:Think()
 	if not self.skyHit then return end
 	
 	if self.supplyCalled then return end
-	
-	if not self.dropPossible then return end
-	
+
 	if self.DieTime - 2 - math.random(6,8) < CurTime() then
 		self.supplyCalled = true
 	else return end
-	
-	LAST_CANISTER_DROP = CurTime()
 	
 	local tr = util.TraceLine( {
 	start = self:GetPos(),

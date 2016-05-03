@@ -64,6 +64,8 @@ function SWEP:PrimaryAttack()
 	local Right = self.Owner:EyeAngles():Right()
 	local Up = self.Owner:EyeAngles():Up()
 	
+	if not self:CanPrimaryAttack() then return end
+	
 	skyHit = false
 	local tr = self.Owner:GetEyeTrace()
 	local skyTrace = util.QuickTrace( tr.HitPos, (tr.HitNormal:Angle()+Angle(90,-180,0)):Forward()*40000 )
@@ -72,8 +74,12 @@ function SWEP:PrimaryAttack()
 	else
 		return
 	end
+
+	if LAST_CANISTER_DROP + 60 > CurTime() then
+		return
+	end	
 	
-	if not self:CanPrimaryAttack() then return end
+	LAST_CANISTER_DROP = CurTime()
 	
 	self:TakeAmmo()
 	self:EmitSound("weapons/flaregun/fire.wav")
