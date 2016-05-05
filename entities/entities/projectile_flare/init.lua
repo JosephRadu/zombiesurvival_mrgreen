@@ -14,7 +14,7 @@ ENT.supplyCalled = false
 
 function ENT:Initialize()
 	self.DieTime = CurTime() + 24
-	self:SetModel("models/weapons/w_grenade.mdl")
+	self:SetModel("models/props_phx2/garbage_metalcan001a.mdl")
 	self:PhysicsInit(COLLISION_GROUP_DEBRIS  )
 	self:SetSolid(COLLISION_GROUP_DEBRIS  )
 	self:SetMaterial("models/debug/debugwhite")

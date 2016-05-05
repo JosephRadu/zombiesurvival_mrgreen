@@ -42,13 +42,14 @@ function GM:GetBlankStats( pl )
 			[ 'berserker' ] = 0
 		},
 		[ 'scrap' ] = 20
+		--[ 'points' ] = 0
 	}
 
 	pl.XP_Commando = 0
 	pl.XP_Support = 0
 	pl.XP_Engineer = 0
 	pl.XP_Berserker = 0
-	pl.Scrap = 20		
+	pl.Scrap = 20	
 
 	return data
 end
@@ -101,6 +102,9 @@ function GM:ReadData( pl )
 		if ( k == 'scrap' ) then
 			pl.Scrap = v
 		end
+		--if ( k == 'points' ) then
+		--	pl:SetPoints(v)
+		--end		
 	end
 	
 	GAMEMODE:SendPlayerData(pl)
@@ -121,7 +125,8 @@ function GM:SaveData( pl )
 					[ 'engineer' ] = pl:GetXPEngineer(),
 					[ 'berserker' ] = pl:GetXPBerserker()
 				},
-			[ 'scrap' ] = pl:GetScrap()
+			[ 'scrap' ] = pl:GetScrap(),
+			[ 'points' ] = pl:GetPoints()			
 		}
 	local newData =  util.TableToJSON( data )
 	file.Write( path, newData )
@@ -222,4 +227,12 @@ concommand.Add( "givescrap", function( pl, cmd, args )
 	end
 end )
 
+concommand.Add( "getclassxp", function( pl )
+	pl:GetClassXP()
+end )
+
+concommand.Add( "cashout", function( pl )
+	pl:GiveXP(math.floor(pl:GetPoints() / 20))
+	pl:TakePoints(pl:GetPoints())
+end )
 

@@ -335,7 +335,7 @@ GM:AddClassItem("commando_vitality_2","Vitality II", nil, 25, CLASS_COMMANDO,ITE
 GM:AddClassItem("commando_vitality_3","Vitality III", nil, 30, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 20)) pl:SetHealth(pl:GetMaxHealth()) end,12,"+20 Maximum Health",nil)
 
 GM:AddClassItem(nil,"Grenade", "weapon_zs_grenade", 40,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil)
-GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/weapons/w_eq_flashbang_thrown.mdl",90)
+GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",90)
 
 
 GM:AddClassItem(nil, "pistol ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",nil)

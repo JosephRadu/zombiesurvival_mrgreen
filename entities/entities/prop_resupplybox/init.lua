@@ -26,6 +26,7 @@ function ENT:Initialize()
 
 	self:SetMaxObjectHealth(200)
 	self:SetObjectHealth(self:GetMaxObjectHealth())
+	self:SetUses(8)
 end
 
 function ENT:KeyValue(key, value)
@@ -122,6 +123,12 @@ function ENT:Use(activator, caller)
 		activator:CenterNotify(COLOR_RED, translate.ClientGet(activator, "no_ammo_here"))
 		return
 	end
+	
+	self:SetUses(self:GetUses()-1)
+	
+	if self:GetUses() <= 0 then
+		self:SetObjectHealth(0)
+	end
 
 	local ammotype
 	local wep = activator:GetActiveWeapon()
@@ -136,7 +143,7 @@ function ENT:Use(activator, caller)
 		end
 	end
 
-	NextUse[myuid] = CurTime() + 120
+	NextUse[myuid] = CurTime() + 30
 
 	net.Start("zs_nextresupplyuse")
 		net.WriteFloat(NextUse[myuid])

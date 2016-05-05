@@ -35,8 +35,21 @@ function meta:GiveScrap(amount)
 	GAMEMODE:SaveData(self)
 end
 
+function meta:GetClassXP()
+	local curClass = self:GetClass()
+
+	if (curClass == 'Commando') then
+		return self:GetXPCommando()
+	elseif (curClass == 'Support') then
+		return self:GetXPSupport()
+	elseif (curClass == 'Engineer') then
+		return self:GetXPEngineer()
+	elseif (curClass == 'Berserker') then
+		return self:GetXPBerserker()
+	end			
+end
+
 function meta:GiveXP( amount , class )
-	
 	local curClass = self:GetClass()
 	if class != nil then
 		curClass = class
@@ -63,4 +76,11 @@ end
 
 function meta:GetItems()
 	return self.Items
+end
+
+function meta:CashOut()
+	local giveXP = math.floor(self:GetPoints() / 20)
+	self:GiveXP(giveXP)
+	self:TakePoints(self:GetPoints())
+	print("Cashed out for " .. giveXP .. "XP!")
 end

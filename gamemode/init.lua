@@ -426,7 +426,7 @@ end
 
 function GM:ShowTeam(pl)
 	if pl:Team() == TEAM_HUMAN and not self.ZombieEscape then
-		pl:SendLua(self:GetWave() > 0 and "GAMEMODE:OpenPointsShop()" or "MakepWorth()")
+		pl:SendLua("MakepWorth()")
 	end
 end
 
@@ -925,7 +925,7 @@ function GM:Think()
 					pl:PreventSkyCade()
 				end
 
-				if self:GetWave() >= 1 and time >= pl.BonusDamageCheck + 60 then
+				if self:GetWave() >= 1 and time >= pl.BonusDamageCheck + 10 then
 					pl.BonusDamageCheck = time
 					pl:AddPoints(2)
 					pl:PrintTranslatedMessage(HUD_PRINTCONSOLE, "minute_points_added", 2)
@@ -1014,6 +1014,8 @@ function GM:CalculateInfliction(victim, attacker)
 				zombies = zombies + 1
 			elseif pl:HasWon() then
 				wonhumans = wonhumans + 1
+				pl:CashOut()
+				pl:GiveXP(5)
 			else
 				humans = humans + 1
 				hum = pl
@@ -1742,6 +1744,8 @@ function GM:PlayerDisconnected(pl)
 	elseif pl:Team() == TEAM_UNDEAD then
 		self.StoredUndeadFrags[uid] = pl:Frags()
 	end
+	
+	self:CashOut()
 
 	if pl:Health() > 0 and not pl:IsSpectator() then
 		local lastattacker = pl:GetLastAttacker()
@@ -1901,18 +1905,22 @@ function GM:GiveRandomEquipment(pl)
 		self:GiveStartingLoadout(pl)
 	elseif GAMEMODE.OverrideStartingWorth then
 		pl:Give("weapon_zs_swissarmyknife")
-	elseif #self.StartLoadouts >= 1 then
-		for _, id in pairs(self.StartLoadouts[math.random(#self.StartLoadouts)]) do
-			local tab = FindStartingItem(id)
-			if tab then
-				if tab.Callback then
-					tab.Callback(pl)
-				elseif tab.SWEP then
-					pl:StripWeapon(tab.SWEP)
-					pl:Give(tab.SWEP)
-				end
-			end
-		end
+	else
+		pl:ConCommand("setClass 1")
+		pl:Give("weapon_zs_battleaxe")
+		pl:Give("weapon_zs_crackler")
+		pl:Give(table.Random(self.StartMeleeWeapons))
+	--elseif #self.StartLoadouts >= 1 then
+		--for _, id in pairs(self.StartLoadouts[math.random(#self.StartLoadouts)]) do
+			--local tab = FindStartingItem(id)
+			--if tab then
+			--	if tab.Callback then
+			--		tab.Callback(pl)
+			--	elseif tab.SWEP then
+
+			--	end
+			--end
+		--end
 	end
 end
 
@@ -2106,6 +2114,8 @@ concommand.Add("worthcheckout", function(sender, command, arguments)
 			end
 		end
 	end
+
+	sender:Give(table.Random(GAMEMODE.StartMeleeWeapons))
 
 	if table.Count(hasalready) > 0 then
 		GAMEMODE.CheckedOut[sender:UniqueID()] = true
@@ -2962,8 +2972,6 @@ function GM:HumanKilledZombie(pl, attacker, inflictor, dmginfo, headshot, suicid
 		pl:DropLootAmmo(attacker)
 	end
 	
-
-	
 	attacker.ZombiesKilled = attacker.ZombiesKilled + 1
 
 	if mostdamager then
@@ -3118,6 +3126,8 @@ function GM:DoPlayerDeath(pl, attacker, dmginfo)
 		pl.NextSpawnTime = ct + 4
 
 		pl:PlayDeathSound()
+		
+		pl:CashOut()
 
 		if attacker:IsPlayer() and attacker ~= pl then
 			gamemode.Call("ZombieKilledHuman", pl, attacker, inflictor, dmginfo, headshot, suicide)
@@ -3677,10 +3687,10 @@ function GM:WaveStateChanged(newstate)
 			end
 
 			-- We should spawn a crate in a random spawn point if no one has any.
-			if not self.ZombieEscape and #ents.FindByClass("prop_arsenalcrate") == 0 then
+			if not self.ZombieEscape and #ents.FindByClass("prop_resupplybox") == 0 then
 				local have = false
 				for _, pl in pairs(humans) do	
-					if pl:HasWeapon("weapon_zs_arsenalcrate") then
+					if pl:HasWeapon("weapon_zs_resupplybox") then
 						have = true
 						break
 					end
@@ -3689,9 +3699,9 @@ function GM:WaveStateChanged(newstate)
 				if not have and #humans >= 1 then
 					local spawn = self:PlayerSelectSpawn(humans[math.random(#humans)])
 					if spawn and spawn:IsValid() then
-						local ent = ents.Create("prop_arsenalcrate")
+						local ent = ents.Create("prop_resupplybox")
 						if ent:IsValid() then
-							ent:SetPos(spawn:GetPos())
+							ent:SetPos(spawn:GetPos() + Vector(0,0,27))
 							ent:Spawn()
 							ent:DropToFloor()
 							ent:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER) -- Just so no one gets stuck in it.

@@ -142,16 +142,6 @@ local function CheckoutDoClick(self)
 	Checkout(tobuy)
 end
 
-local function RandDoClick(self)
-	gamemode.Call("SuppressArsenalUpgrades", 1)
-
-	RunConsoleCommand("worthrandom")
-
-	if pWorth and pWorth:Valid() then
-		pWorth:Close()
-	end
-end
-
 GM.SavedCarts = {}
 hook.Add("Initialize", "LoadCarts", function()
 	if file.Exists(GAMEMODE.CartFile, "DATA") then
@@ -292,7 +282,7 @@ function MakepWorth()
 			draw.RoundedBox(8, 0, 0, w, h, outline)
 			draw.RoundedBox(4, 4, 4, w - 8, h - 8, color_black)
 		end
-			
+		
 		classButton[classid]:SetFont("ZSHUDFontSmallest")
 		classPanel[classid] = vgui.Create("DPanel",frame)
 		classPanel[classid]:SetSize(wid * 0.67, hei * 0.8)
@@ -461,18 +451,11 @@ function MakepWorth()
 	checkout:CenterHorizontal()
 	checkout.DoClick = CheckoutDoClick
 
-	local randombutton = vgui.Create("DButton", frame)
-	randombutton:SetText("Random")
-	randombutton:SetSize(64, 16)
-	randombutton:AlignBottom(8)
-	randombutton:AlignRight(8)
-	randombutton.DoClick = RandDoClick
-
 	local clearbutton = vgui.Create("DButton", frame)
 	clearbutton:SetText("Clear")
 	clearbutton:SetSize(64, 16)
 	clearbutton:AlignRight(8)
-	clearbutton:MoveAbove(randombutton, 8)
+	clearbutton:AlignBottom(8)
 	clearbutton.DoClick = ClearCartDoClick
 
 	frame:Center()

@@ -12,6 +12,10 @@ GM.StartLoadouts = {
 	{"blstr", "pipe"}
 }
 
+GM.StartMeleeWeapons = {
+	"weapon_zs_wrench", "weapon_zs_swissarmyknife", "weapon_zs_plank", "weapon_zs_pot", "weapon_zs_pipe", "weapon_zs_lamp", "weapon_zs_keyboard", "weapon_zs_fryingpan"
+}
+
 
 GM.BossZombies = CreateConVar("zs_bosszombies", "1", FCVAR_ARCHIVE + FCVAR_NOTIFY, "Summon a boss zombie in the middle of each wave break."):GetBool()
 cvars.AddChangeCallback("zs_bosszombies", function(cvar, oldvalue, newvalue)

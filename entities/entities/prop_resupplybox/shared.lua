@@ -52,3 +52,10 @@ end
 function ENT:ClearObjectOwner()
 	self:SetObjectOwner(NULL)
 end
+
+function ENT:SetUses(use)
+	self:SetDTFloat(2, use)
+end
+function ENT:GetUses()
+	return self:GetDTFloat(2)
+end

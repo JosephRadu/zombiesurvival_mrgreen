@@ -41,8 +41,12 @@ function ENT:RenderInfo(pos, ang, owner)
 
 		draw.SimpleText(translate.Get("resupply_box"), "ZS3D2DFont2", 0, 0, NextUse <= CurTime() and COLOR_GREEN or COLOR_DARKRED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
+		draw.SimpleText("Charges: " .. self:GetUses(), "ZS3D2DFont2", 0, 90, NextUse <= CurTime() and COLOR_GREEN or COLOR_DARKRED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)		
+		
+		draw.SimpleText(math.Clamp(math.Round(NextUse - CurTime()),0,120), "ZS3D2DFont2Small", 0, -60, NextUse <= CurTime() and COLOR_GREEN or COLOR_DARKRED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)				
+		
 		if owner:IsValid() and owner:IsPlayer() then
-			draw.SimpleText("("..owner:ClippedName()..")", "ZS3D2DFont2Small", 0, 40, owner == MySelf and COLOR_BLUE or COLOR_GRAY, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+			draw.SimpleText("("..owner:ClippedName()..")", "ZS3D2DFont2Small", 0, -100, owner == MySelf and COLOR_BLUE or COLOR_GRAY, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
 		end
 
 	cam.End3D2D()

@@ -928,4 +928,17 @@ function meta:DropLootAmmo(attacker)
 		ent:Spawn()
 		ent:SetAmmo(GAMEMODE.AmmoCache[ammotype] or 1)
 	end
+	
+	if math.random(1,10) == 1 then
+		local scrapAmount = math.random(3,6)
+		for i=1, scrapAmount do
+			local ent = ents.Create("prop_scrap")
+			if ent:IsValid() then
+				ent:SetPos(pos)
+				ent:Spawn()
+			end	
+		end
+	end
+	
+	
 end

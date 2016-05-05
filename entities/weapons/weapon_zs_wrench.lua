@@ -27,15 +27,15 @@ SWEP.UseHands = true
 
 SWEP.HoldType = "melee"
 
-SWEP.Primary.Delay = 0.8
-SWEP.MeleeDamage = 28
+SWEP.Primary.Delay = 0.68
+SWEP.MeleeDamage = 30
 SWEP.MeleeRange = 50
 SWEP.MeleeSize = 0.875
 
 SWEP.HitGesture = ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE
 SWEP.MissGesture = SWEP.HitGesture
 
-SWEP.SwingTime = 0.19
+SWEP.SwingTime = 0.2
 SWEP.SwingRotation = Angle(30, -30, -30)
 SWEP.SwingOffset = Vector(0, -30, 0)
 SWEP.SwingHoldType = "grenade"
