@@ -15,9 +15,9 @@ SWEP.UseHands = true
 SWEP.ViewModel = "models/weapons/c_arms_citizen.mdl"
 SWEP.WorldModel	= ""
 
-SWEP.Damage = 5
+SWEP.Damage = 6
 SWEP.UppercutDamageMultiplier = 3
-SWEP.HitDistance = 42
+SWEP.HitDistance = 40
 
 SWEP.ViewModelFOV = 56
 
@@ -56,7 +56,7 @@ end
 
 function SWEP:PrimaryAttack(right)
 	--self:SetWeaponHoldType("fist")
-	self:SetNextIdleHoldType(CurTime() + 2)
+	self:SetNextIdleHoldType(CurTime() + 1.5)
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.WalkSpeed = 165
 	self.Owner:ResetSpeed()
@@ -75,8 +75,8 @@ function SWEP:PrimaryAttack(right)
 	self:UpdateNextIdle()
 	self:SetNextMeleeAttack( CurTime() + 0.2 )
 	
-	self:SetNextPrimaryFire( CurTime() + 0.36 )
-	self:SetNextSecondaryFire( CurTime() + 0.36 )
+	self:SetNextPrimaryFire( CurTime() + 0.33 )
+	self:SetNextSecondaryFire( CurTime() + 0.33 )
 end
 
 function SWEP:SecondaryAttack()

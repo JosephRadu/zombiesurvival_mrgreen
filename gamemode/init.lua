@@ -2253,7 +2253,7 @@ function GM:EntityTakeDamage(ent, dmginfo)
 	attacker, inflictor = dmginfo:GetAttacker(), dmginfo:GetInflictor()
 
 	-- Don't allow blowing up props during wave 0.
-	if self:GetWave() <= 0 and string.sub(ent:GetClass(), 1, 12) == "prop_physics" and inflictor.NoPropDamageDuringWave0 then
+	if self:GetWave() <= 0 and ent:GetClass() and string.sub(ent:GetClass(), 1, 12) == "prop_physics" and inflictor.NoPropDamageDuringWave0 then
 		dmginfo:SetDamage(0)
 		dmginfo:SetDamageType(DMG_BULLET)
 		return
@@ -2274,7 +2274,7 @@ function GM:EntityTakeDamage(ent, dmginfo)
 				ent.LastExplosionTeam = inflictor.LastExplosionTeam
 				ent.LastExplosionTime = CurTime()
 			end
-		elseif inflictor:IsPlayer() and string.sub(ent:GetClass(), 1, 12) == "prop_physics" then -- Physics object damaged by player.
+		elseif inflictor:IsPlayer() and ent:GetClass() and string.sub(ent:GetClass(), 1, 12) == "prop_physics" then -- Physics object damaged by player.
 			if inflictor:Team() == TEAM_HUMAN then
 				local phys = ent:GetPhysicsObject()
 				if phys:IsValid() and phys:HasGameFlag(FVPHYSICS_PLAYER_HELD) and inflictor:GetCarry() ~= ent or ent._LastDropped and CurTime() < ent._LastDropped + 3 and ent._LastDroppedBy ~= inflictor then -- Human player damaged a physics object while it was being carried or recently carried. They weren't the carrier.

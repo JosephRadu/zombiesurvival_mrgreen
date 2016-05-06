@@ -51,7 +51,7 @@ function ENT:Use( activator, caller )
 			newent:SetPos(self:GetPos() + Vector(math.random(-8,8),math.random(-8,8),64))
 			newent:SetAngles(self:GetAngles())
 			newent:Spawn()
-			newent:SetAmmo((GAMEMODE.AmmoCache[v] * 2) or 1)
+			newent:SetAmmo((GAMEMODE.AmmoCache[v] * 3) or 1)
 		end
 	end
 

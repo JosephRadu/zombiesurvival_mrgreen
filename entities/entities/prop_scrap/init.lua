@@ -25,8 +25,8 @@ function ENT:Initialize()
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then
 		phys:Wake()
-		phys:SetMass(1.5)
-		phys:SetVelocity(VectorRand():GetNormalized() * math.Rand(100, 200))
+		phys:SetMass(2)
+		phys:SetVelocity(Vector(math.Rand(-300,300),math.Rand(-300,300),math.Rand(-300,300)))
 	end
 	
 	self:ItemCreated()

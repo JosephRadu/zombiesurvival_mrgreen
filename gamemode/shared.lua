@@ -454,7 +454,7 @@ function GM:ScalePlayerDamage(pl, hitgroup, dmginfo)
 		if hitgroup == HITGROUP_HEAD then
 			dmginfo:SetDamage(dmginfo:GetDamage() * 2)
 		elseif hitgroup == HITGROUP_LEFTLEG or hitgroup == HITGROUP_RIGHTLEG or hitgroup == HITGROUP_GEAR then
-			dmginfo:SetDamage(dmginfo:GetDamage() * 0.25)
+			dmginfo:SetDamage(dmginfo:GetDamage() * 0.65)
 		elseif hitgroup == HITGROUP_STOMACH or hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM then
 			dmginfo:SetDamage(dmginfo:GetDamage() * 0.75)
 		end

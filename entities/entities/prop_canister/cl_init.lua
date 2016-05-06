@@ -11,7 +11,7 @@ function ENT:Initialize()
 	self:DestroyShadow() 
 	Wave = GAMEMODE:GetWave()
 	Used = false
-
+	self.SpawnTime = CurTime()
 end
 
 local vOffset = Vector(84, 0, 6)
