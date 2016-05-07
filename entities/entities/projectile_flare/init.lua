@@ -59,6 +59,8 @@ function ENT:Think()
 	endpos = self:GetPos() - Vector(0,0,10000),
 	filter = function( ent ) end
 	} )
+	
+	SUPPLY_DROP_STATUS = "launching"
 		
 	if (SERVER) then
 		local aBasePos = tr.HitPos

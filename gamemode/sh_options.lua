@@ -309,6 +309,8 @@ LIMIT_SCRAP = 90
 
 LAST_CANISTER_DROP = -60
 
+SUPPLY_DROP_STATUS = "online"
+
 GM.ClassItemCategories = {
 	[ITEMCAT_WEAPONS] = "Weapons",
 	[ITEMCAT_AMMO] = "Ammunition",

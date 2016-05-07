@@ -45,6 +45,7 @@ AddCSLuaFile("obj_weapon_extend.lua")
 AddCSLuaFile("obj_entity_extend.lua")
 
 AddCSLuaFile("vgui/dgamestate.lua")
+AddCSLuaFile("vgui/supplydrop.lua")
 AddCSLuaFile("vgui/dteamcounter.lua")
 AddCSLuaFile("vgui/dmodelpanelex.lua")
 AddCSLuaFile("vgui/dammocounter.lua")

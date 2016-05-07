@@ -16,6 +16,7 @@ include("cl_targetid.lua")
 include("cl_postprocess.lua")
 
 include("vgui/dgamestate.lua")
+include("vgui/supplydrop.lua")
 include("vgui/dteamcounter.lua")
 include("vgui/dmodelpanelex.lua")
 include("vgui/dammocounter.lua")
@@ -940,6 +941,10 @@ function GM:EvaluateFilmMode()
 	if self.GameStatePanel and self.GameStatePanel:Valid() then
 		self.GameStatePanel:SetVisible(visible)
 	end
+	
+	if self.SupplyDropPanel and self.SupplyDropPanel:Valid() then
+		self.SupplyDropPanel:SetVisible(visible)
+	end	
 
 	if self.TopNotificationHUD and self.TopNotificationHUD:Valid() then
 		self.TopNotificationHUD:SetVisible(visible)
@@ -958,10 +963,17 @@ function GM:CreateVGUI()
 	local screenscale = BetterScreenScale()
 	self.GameStatePanel = vgui.Create("DGameState")
 	self.GameStatePanel:SetTextFont("ZSHUDFontSmaller")
-	self.GameStatePanel:SetAlpha(220)
+	self.GameStatePanel:SetAlpha(230)
 	self.GameStatePanel:SetSize(screenscale * 420, screenscale * 80)
 	self.GameStatePanel:ParentToHUD()
 
+	self.SupplyDropPanel = vgui.Create("SupplyDrop")	
+	self.SupplyDropPanel:SetTextFont("ZSHUDFontSmaller")
+	self.SupplyDropPanel:SetAlpha(230)
+	self.SupplyDropPanel:SetSize(screenscale * 420, screenscale * 80)
+	self.SupplyDropPanel:ParentToHUD()
+	self.SupplyDropPanel:SetPos(screenscale * 8,screenscale * 160)
+	
 	self.TopNotificationHUD = vgui.Create("DEXNotificationsList")
 	self.TopNotificationHUD:SetAlign(RIGHT)
 	self.TopNotificationHUD.PerformLayout = function(pan)

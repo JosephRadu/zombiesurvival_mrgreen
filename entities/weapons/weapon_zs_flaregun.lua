@@ -75,11 +75,13 @@ function SWEP:PrimaryAttack()
 		return
 	end
 
-	if LAST_CANISTER_DROP + 60 > CurTime() then
+	if LAST_CANISTER_DROP + 80 > CurTime() then
 		return
 	end	
 	
 	LAST_CANISTER_DROP = CurTime()
+	
+	SUPPLY_DROP_STATUS = "active"
 	
 	self:TakeAmmo()
 	self:EmitSound("weapons/flaregun/fire.wav")

@@ -70,15 +70,33 @@ function ENT:Use( activator, caller )
 			end		
 		end
 	end
-	
 	--self.Active = false
 	self:ResetSequence("idle_open")
 	self:EmitSound("ambient/levels/canals/headcrab_canister_open1.wav")
 end
 
 function ENT:Think()
-
-if self.Active then return end
+	if self.Active then 
+		if self.Launched + 80 < CurTime() then
+			local effectdata = EffectData()
+			effectdata:SetOrigin(self:GetPos())
+			util.Effect("Explosion", effectdata)
+			
+			SUPPLY_DROP_STATUS = "online"
+			
+			local scrapAmount = math.random(4,6)
+			for i=1, scrapAmount do
+				local ent = ents.Create("prop_scrap")
+				if ent:IsValid() then
+					ent:SetPos(self:GetPos() + Vector(0,0,16))
+					ent:Spawn()
+				end	
+			end
+		
+			self:Remove()
+		end
+		return
+	end
 	if self.Launched + 5.2 < CurTime() then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		local phys = self:GetPhysicsObject()
@@ -99,6 +117,8 @@ if self.Active then return end
 					end
 				end
 			end
+			
+			SUPPLY_DROP_STATUS = "offline"
 			
 		end
 	end
