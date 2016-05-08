@@ -13,7 +13,7 @@ ENT.descending = false
 ENT.supplyCalled = false
 
 function ENT:Initialize()
-	self.DieTime = CurTime() + 24
+	self.DieTime = CurTime() + 25
 	self:SetModel("models/props_phx2/garbage_metalcan001a.mdl")
 	self:PhysicsInit(COLLISION_GROUP_DEBRIS  )
 	self:SetSolid(COLLISION_GROUP_DEBRIS  )
@@ -59,10 +59,13 @@ function ENT:Think()
 	endpos = self:GetPos() - Vector(0,0,10000),
 	filter = function( ent ) end
 	} )
-	
-	SUPPLY_DROP_STATUS = "launching"
 		
 	if (SERVER) then
+	
+		net.Start("zs_supplydropstatus")
+		net.WriteString("launching")
+		net.Broadcast()		
+	
 		local aBasePos = tr.HitPos
 		local ent = ents.Create( "env_headcrabcanister" )
 		ent:SetPos( aBasePos )

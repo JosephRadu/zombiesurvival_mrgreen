@@ -75,14 +75,12 @@ function ENT:Use( activator, caller )
 	self:EmitSound("ambient/levels/canals/headcrab_canister_open1.wav")
 end
 
-function ENT:Think()
+function ENT:Think()	
 	if self.Active then 
 		if self.Launched + 80 < CurTime() then
 			local effectdata = EffectData()
 			effectdata:SetOrigin(self:GetPos())
 			util.Effect("Explosion", effectdata)
-			
-			SUPPLY_DROP_STATUS = "online"
 			
 			local scrapAmount = math.random(4,6)
 			for i=1, scrapAmount do
@@ -96,7 +94,8 @@ function ENT:Think()
 			self:Remove()
 		end
 		return
-	end
+	end	
+	
 	if self.Launched + 5.2 < CurTime() then
 		self:PhysicsInit(SOLID_VPHYSICS)
 		local phys = self:GetPhysicsObject()
@@ -117,9 +116,14 @@ function ENT:Think()
 					end
 				end
 			end
-			
-			SUPPLY_DROP_STATUS = "offline"
-			
 		end
 	end
+	
+	if SERVER then
+		if self.Active then
+			net.Start("zs_supplydropstatus")
+			net.WriteString("offline")
+			net.Broadcast()	
+		end
+	end		
 end

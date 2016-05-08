@@ -380,6 +380,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("zs_lifestatsbe")
 	util.AddNetworkString("zs_boss_spawned")
 	util.AddNetworkString("zs_flaregun_dropped")
+	util.AddNetworkString("zs_supplydropstatus")
 	util.AddNetworkString("zs_commission")
 	util.AddNetworkString("zs_healother")
 	util.AddNetworkString("zs_repairobject")
@@ -903,9 +904,17 @@ function GM:Think()
 	if wave == 0 then
 		self:CalculateZombieVolunteers()
 	end
+	
+	if not SUPPLY_DROP_ONLINE and SUPPLY_DROP_LAST_DROP + 100 < CurTime() then
+		SUPPLY_DROP_ONLINE = true
+		net.Start("zs_supplydropstatus")
+		net.WriteString("online")
+		net.Broadcast()	
+	end	
 
 	if NextTick <= time then
 		NextTick = time + 1
+
 
 		local doafk = not self:GetWaveActive() and wave == 0
 		local dopoison = self:GetEscapeStage() == ESCAPESTAGE_DEATH

@@ -75,21 +75,26 @@ function SWEP:PrimaryAttack()
 		return
 	end
 
-	if LAST_CANISTER_DROP + 80 > CurTime() then
+	if not SUPPLY_DROP_ONLINE then
 		return
 	end	
 	
-	LAST_CANISTER_DROP = CurTime()
-	
-	SUPPLY_DROP_STATUS = "active"
+	SUPPLY_DROP_LAST_DROP = CurTime()
+	SUPPLY_DROP_ONLINE = false
 	
 	self:TakeAmmo()
 	self:EmitSound("weapons/flaregun/fire.wav")
 	self:ShootEffects(self)
 	
+	self:SetNextPrimaryFire(CurTime()+1)
+	
 	if not SERVER then
 		return
 	end
+	
+	net.Start("zs_supplydropstatus")
+	net.WriteString("active")
+	net.Broadcast()	
 	
 	local owner = self.Owner
 	if SERVER then

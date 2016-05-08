@@ -7,6 +7,8 @@ function PANEL:Init()
 	self:InvalidateLayout()
 end
 
+local SUPPLY_DROP_STATUS = "online"
+
 function PANEL:SetTextFont(font)
 	self.m_Text.Font = font
 	self.m_Text:SetFont(font)
@@ -30,4 +32,10 @@ function PANEL:Paint()
 	return true
 end
 
+net.Receive("zs_supplydropstatus", function()
+	SUPPLY_DROP_STATUS = net.ReadString()
+	GAMEMODE:CenterNotify({killicon = "default"}, " ", COLOR_CYAN, "Supply drop " .. SUPPLY_DROP_STATUS, {killicon = "default"})	
+end)
+
 vgui.Register("SupplyDrop", PANEL, "DPanel")
+

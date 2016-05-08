@@ -16,13 +16,14 @@ SWEP.Primary.Automatic = false
 SWEP.Primary.Ammo = "pistol"
 SWEP.RequiredClip = 1
 
+SWEP.Recoil = 1
+
 SWEP.Secondary.ClipSize = 1
 SWEP.Secondary.DefaultClip = 1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "dummy"
 
 SWEP.WalkSpeed = SPEED_NORMAL
-
 SWEP.HoldType = "pistol"
 SWEP.IronSightsHoldType = "ar2"
 
@@ -32,6 +33,8 @@ SWEP.EmptyWhenPurchased = true
 
 function SWEP:Initialize()
 	if not self:IsValid() then return end --???
+	
+	self.Recoil = (self.Primary.Damage * self.Primary.NumShots) / 10
 
 	self:SetWeaponHoldType(self.HoldType)
 	self:SetDeploySpeed(1.1)
@@ -55,9 +58,9 @@ function SWEP:GetCone()
 	local basecone = self.ConeMin
 	local conedelta = self.ConeMax - basecone
 
-	local multiplier = math.min(self.Owner:GetVelocity():Length() / self.WalkSpeed, 1) * 0.5
-	if not self.Owner:Crouching() then multiplier = multiplier + 0.25 end
-	if not self:GetIronsights() then multiplier = multiplier + 0.25 end
+	local multiplier = math.min(self.Owner:GetVelocity():Length() / self.WalkSpeed, 1) * 0.7
+	if not self.Owner:Crouching() then multiplier = multiplier + 0.1 end
+	if not self:GetIronsights() then multiplier = multiplier + 0.15 end
 
 	return basecone + conedelta * multiplier ^ self.ConeRamp
 end
@@ -65,11 +68,18 @@ end
 function SWEP:PrimaryAttack()
 	if not self:CanPrimaryAttack() then return end
 	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-
+	
 	self:EmitFireSound()
 	self:TakeAmmo()
 	self:ShootBullets(self.Primary.Damage, self.Primary.NumShots, self:GetCone())
 	self.IdleAnimation = CurTime() + self:SequenceDuration()
+	
+	self.Owner:ViewPunch(Angle((self.Recoil * -0.2), math.random(0.01,-0.01), 0))	
+	local eyeang = self.Owner:EyeAngles()
+	eyeang.pitch = eyeang.pitch - self.Recoil * 0.1
+	self.Owner:SetEyeAngles(eyeang)		
+	
+	self.LastShot = CurTime()	
 end
 
 function SWEP:GetWalkSpeed()

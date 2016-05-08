@@ -10,9 +10,6 @@ GM.ItemCategoryIcons = {
 	[ITEMCAT_RETURNS] = "icon16/user_delete.png",
 	[ITEMCAT_WEAPONS] = "icon16/gun.png",
 	[ITEMCAT_PERKS] = "icon16/rosette.png",
-	
-	
-	
 }
 
 GM.LifeStatsLifeTime = 5
