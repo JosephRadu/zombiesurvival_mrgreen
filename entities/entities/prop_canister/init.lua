@@ -64,8 +64,9 @@ function ENT:Use( activator, caller )
 				wep:SetPos(self:GetPos() + Vector(math.random(-6,6),math.random(-6,6),64))
 				wep:SetAngles(self:GetAngles())
 				wep:SetWeaponType(v.Signature)
-				wep:SetShouldRemoveAmmo(true)
+				wep:SetShouldRemoveAmmo(false)
 				wep:Spawn()	
+				wep.IsPreplaced = true
 				possibleWeps[#possibleWeps + 1] = v.Signature
 			end		
 		end

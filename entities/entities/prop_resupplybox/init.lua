@@ -83,11 +83,11 @@ function ENT:OnTakeDamage(dmginfo)
 		self:ResetLastBarricadeAttacker(attacker, dmginfo)
 	end
 end
-
+--[[
 function ENT:AltUse(activator, tr)
 	self:PackUp(activator)
 end
-
+]]--
 function ENT:OnPackedUp(pl)
 	pl:GiveEmptyWeapon("weapon_zs_resupplybox")
 	pl:GiveAmmo(1, "helicoptergun")

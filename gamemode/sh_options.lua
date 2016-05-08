@@ -336,7 +336,8 @@ GM:AddClassItem("commando_vitality_2","Vitality II", nil, 25, CLASS_COMMANDO,ITE
 GM:AddClassItem("commando_vitality_3","Vitality III", nil, 30, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 20)) pl:SetHealth(pl:GetMaxHealth()) end,12,"+20 Maximum Health",nil)
 
 GM:AddClassItem(nil,"Grenade", "weapon_zs_grenade", 40,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil)
-GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",90)
+GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",80)
+GM:AddClassItem(nil,"Resupply box", "weapon_zs_resupplybox", 40,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
 
 
 GM:AddClassItem(nil, "pistol ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",nil)
@@ -370,6 +371,7 @@ GM:AddClassItem(nil,"Pack of boards", "weapon_zs_boardpack", 20,  CLASS_SUPPORT,
 GM:AddClassItem(nil,"Message beacon", "weapon_zs_messagebeacon", 5,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
 GM:AddClassItem("support_spotlamp","Spot lamp", "weapon_zs_spotlamp", 10,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,5,nil,nil,nil)
 
+GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",80)
 
 
 
