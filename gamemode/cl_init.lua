@@ -47,6 +47,8 @@ include("cl_deathnotice.lua")
 include("cl_floatingscore.lua")
 include("cl_hint.lua")
 
+include("cl_announcer.lua")
+
 include("cl_zombieescape.lua")
 
 w, h = ScrW(), ScrH()

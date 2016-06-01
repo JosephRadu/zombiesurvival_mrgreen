@@ -91,10 +91,11 @@ function SWEP:PrimaryAttack()
 	if not SERVER then
 		return
 	end
+	timer.Simple( 5, 	function() net.Start("zs_supplydropstatus")
+		net.WriteString("launched")
+	net.Broadcast()	end  ) 
 	
-	net.Start("zs_supplydropstatus")
-	net.WriteString("active")
-	net.Broadcast()	
+
 	
 	local owner = self.Owner
 	if SERVER then
@@ -111,7 +112,7 @@ function SWEP:PrimaryAttack()
 			local phys = ent:GetPhysicsObject()
 			if phys:IsValid() then
 				phys:Wake()
-				phys:SetVelocity((self.Owner:GetAimVector()+Vector(0,0,0.1)) * 10000)
+				phys:SetVelocity((self.Owner:GetAimVector()+Vector(0,0,0.1)) * 15000)
 			end
 		end
 	end

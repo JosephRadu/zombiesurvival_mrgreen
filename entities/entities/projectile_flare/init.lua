@@ -13,7 +13,7 @@ ENT.descending = false
 ENT.supplyCalled = false
 
 function ENT:Initialize()
-	self.DieTime = CurTime() + 25
+	self.DieTime = CurTime() + 27
 	self:SetModel("models/props_phx2/garbage_metalcan001a.mdl")
 	self:PhysicsInit(COLLISION_GROUP_DEBRIS  )
 	self:SetSolid(COLLISION_GROUP_DEBRIS  )
@@ -26,6 +26,10 @@ function ENT:Initialize()
 		phys:SetMass(1.5)
 		phys:SetMaterial("metal")
 	end
+	
+	timer.Simple( 12, 	function() net.Start("zs_supplydropstatus")
+		net.WriteString("inbound")
+	net.Broadcast()	end  ) 	
 end
 
 function ENT:Think()
@@ -50,7 +54,7 @@ function ENT:Think()
 	
 	if self.supplyCalled then return end
 
-	if self.DieTime - 2 - math.random(6,8) < CurTime() then
+	if self.DieTime - 2 - math.random(7,9) < CurTime() then
 		self.supplyCalled = true
 	else return end
 	
@@ -60,11 +64,9 @@ function ENT:Think()
 	filter = function( ent ) end
 	} )
 		
-	if (SERVER) then
-	
-		net.Start("zs_supplydropstatus")
-		net.WriteString("launching")
-		net.Broadcast()		
+		
+		
+	if (SERVER) then	
 	
 		local aBasePos = tr.HitPos
 		local ent = ents.Create( "env_headcrabcanister" )

@@ -19,6 +19,17 @@ function meta:GetXPBerserker()
 end
 
 function meta:SetClass(class)
+	for k,v in pairs(GAMEMODE.HumanClasses) do
+		if (v.Name == class ) then
+			self:SetMaxHealth(math.max(1, v.Health)) self:SetHealth(self:GetMaxHealth())
+			self.HumanSpeedAdder = (self.HumanSpeedAdder or 0) + v.BonusSpeed
+			
+			v:CallBack(self)
+
+			self:ResetSpeed()
+		end
+	end
+
 	self.CurrentClass = class
 end
 
@@ -38,11 +49,11 @@ end
 function meta:GetClassXP()
 	local curClass = self:GetClass()
 
-	if (curClass == 'Commando') then
+	if (curClass == 'Skirmisher') then
 		return self:GetXPCommando()
-	elseif (curClass == 'Support') then
+	elseif (curClass == 'Carpenter') then
 		return self:GetXPSupport()
-	elseif (curClass == 'Engineer') then
+	elseif (curClass == 'Rogue') then
 		return self:GetXPEngineer()
 	elseif (curClass == 'Berserker') then
 		return self:GetXPBerserker()
@@ -55,11 +66,11 @@ function meta:GiveXP( amount , class )
 		curClass = class
 	end
 	
-	if (curClass == 'Commando') then
+	if (curClass == 'Skirmisher') then
 		self.XP_Commando = math.Clamp(self.XP_Commando + amount,0,LIMIT_XP)
-	elseif (curClass == 'Support') then
+	elseif (curClass == 'Carpenter') then
 		self.XP_Support = math.Clamp(self.XP_Support + amount,0,LIMIT_XP)
-	elseif (curClass == 'Engineer') then
+	elseif (curClass == 'Rogue') then
 		self.XP_Engineer = math.Clamp(self.XP_Engineer + amount,0,LIMIT_XP)
 	elseif (curClass == 'Berserker') then
 		self.XP_Berserker = math.Clamp(self.XP_Berserker + amount,0,LIMIT_XP)

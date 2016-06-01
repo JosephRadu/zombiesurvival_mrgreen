@@ -45,6 +45,7 @@ include("sh_crafts.lua")
 include("sh_util.lua")
 include("sh_options.lua")
 include("sh_zombieclasses.lua")
+include("sh_humanclasses.lua")
 include("sh_animations.lua")
 include("sh_sigils.lua")
 include("sh_channel.lua")
@@ -369,8 +370,8 @@ function GM:Move(pl, move)
 			move:SetMaxSpeed(36)
 			move:SetMaxClientSpeed(36)
 		elseif move:GetForwardSpeed() < 0 then
-			move:SetMaxSpeed(move:GetMaxSpeed() * 0.8)
-			move:SetMaxClientSpeed(move:GetMaxClientSpeed() * 0.8)
+			move:SetMaxSpeed(move:GetMaxSpeed() * 0.6)
+			move:SetMaxClientSpeed(move:GetMaxClientSpeed() * 0.6)
 		elseif move:GetForwardSpeed() == 0 then
 			move:SetMaxSpeed(move:GetMaxSpeed() * 0.95)
 			move:SetMaxClientSpeed(move:GetMaxClientSpeed() * 0.95)
@@ -402,7 +403,7 @@ function GM:OnPlayerHitGround(pl, inwater, hitfloater, speed)
 		speed = math.max(0, speed - 200)
 	end
 
-	local damage = (0.1 * (speed - 525)) ^ 1.45
+	local damage = (0.1 * (speed - 460))
 	if hitfloater then damage = damage / 2 end
 
 	if math.floor(damage) > 0 then

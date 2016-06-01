@@ -34,7 +34,16 @@ end
 
 net.Receive("zs_supplydropstatus", function()
 	SUPPLY_DROP_STATUS = net.ReadString()
-	GAMEMODE:CenterNotify({killicon = "default"}, " ", COLOR_CYAN, "Supply drop " .. SUPPLY_DROP_STATUS, {killicon = "default"})	
+	
+	if SUPPLY_DROP_STATUS == "launched" then
+		surface.PlaySound(table.Random(GAMEMODE.Announcer.SUPPLY_DROP_LAUNCHED))
+	elseif SUPPLY_DROP_STATUS == "online" then
+		surface.PlaySound(table.Random(GAMEMODE.Announcer.SUPPLY_DROP_ONLINE))
+	elseif SUPPLY_DROP_STATUS == "inbound" then
+		surface.PlaySound(table.Random(GAMEMODE.Announcer.SUPPLY_DROP_INBOUND))		
+	end	
+	
+	--GAMEMODE:CenterNotify({killicon = "default"}, " ", COLOR_CYAN, "Supply drop " .. SUPPLY_DROP_STATUS, {killicon = "default"})	
 end)
 
 vgui.Register("SupplyDrop", PANEL, "DPanel")

@@ -5,7 +5,7 @@ SWEP.PrintName = "Fists"
 if GAMEMODE.ZombieEscape then
 	SWEP.WalkSpeed = SPEED_ZOMBIEESCAPE_NORMAL
 else
-	SWEP.WalkSpeed = SPEED_NORMAL
+	SWEP.WalkSpeed = SPEED_FASTEST
 end
 
 SWEP.IsMelee = true
@@ -60,7 +60,6 @@ function SWEP:PrimaryAttack(right)
 	self.Owner:SetAnimation(PLAYER_ATTACK1)
 	self.WalkSpeed = 165
 	self.Owner:ResetSpeed()
-
 	local anim = "fists_left"
 	if ( right ) then anim = "fists_right" end
 	if ( self:GetCombo() >= 2 ) then
@@ -73,10 +72,10 @@ function SWEP:PrimaryAttack(right)
 	self:EmitSound( SwingSound )
 
 	self:UpdateNextIdle()
-	self:SetNextMeleeAttack( CurTime() + 0.2 )
+	self:SetNextMeleeAttack( CurTime() + 0.13 )
 	
-	self:SetNextPrimaryFire( CurTime() + 0.33 )
-	self:SetNextSecondaryFire( CurTime() + 0.33 )
+	self:SetNextPrimaryFire( CurTime() + 0.31 )
+	self:SetNextSecondaryFire( CurTime() + 0.31 )
 end
 
 function SWEP:SecondaryAttack()

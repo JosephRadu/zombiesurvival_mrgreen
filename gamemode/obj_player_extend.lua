@@ -362,8 +362,8 @@ function meta:ResetSpeed(noset, health)
 
 	if 32 < speed and not GAMEMODE.ZombieEscape then
 		if not health then health = self:Health() end
-		if health < 60 then
-			speed = math.max(88, speed - speed * 0.4 * (1 - health / 60))
+		if health < 72 then
+			speed = math.max(88, speed - speed * 0.4 * (1 - health / 72))
 		end
 	end
 

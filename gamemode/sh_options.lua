@@ -293,22 +293,22 @@ CLASS_BERSERKER = 3
 CLASS_ENGINEER = 4
 
 GM.Classes = {
-	[CLASS_COMMANDO] = "Commando",		
-	[CLASS_SUPPORT] = "Support",	
-	[CLASS_ENGINEER] = "Engineer",
+	[CLASS_COMMANDO] = "Skirmisher",		
+	[CLASS_SUPPORT] = "Carpenter",	
+	[CLASS_ENGINEER] = "Rogue",
 	[CLASS_BERSERKER] = "Berserker"
 }
-
-ITEMCAT_WEAPONS = 1
-ITEMCAT_AMMO = 2
-ITEMCAT_TOOLS = 3
-ITEMCAT_PERKS = 4
 
 LIMIT_XP = 20
 LIMIT_SCRAP = 90
 
 SUPPLY_DROP_LAST_DROP = -60
 SUPPLY_DROP_ONLINE = true
+
+ITEMCAT_WEAPONS = 1
+ITEMCAT_AMMO = 2
+ITEMCAT_TOOLS = 3
+ITEMCAT_PERKS = 4
 
 GM.ClassItemCategories = {
 	[ITEMCAT_WEAPONS] = "Weapons",
@@ -331,11 +331,12 @@ GM:AddClassItem(nil,"USP", "weapon_zs_battleaxe", 30, CLASS_COMMANDO,ITEMCAT_WEA
 
 GM:AddClassItem("commando_mp7","MP7", "weapon_zs_tosser", 40, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,8,nil,nil,nil)
 GM:AddClassItem(nil,"Famas", "weapon_zs_crackler", 50, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
-GM:AddClassItem("commando_ak47","AK-47", "weapon_zs_akbar", 70, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,15,nil,nil,nil)
+GM:AddClassItem("commando_musket","Musket", "weapon_zs_musket", 60, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,18,nil,nil,nil)
+GM:AddClassItem("commando_defender","Defender", "weapon_zs_defender", 60, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,14,nil,nil,nil)
 
-GM:AddClassItem("commando_vitality_1","Vitality I", nil, 20, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 10)) pl:SetHealth(pl:GetMaxHealth()) end,nil,"+10 Maximum Health",nil)
-GM:AddClassItem("commando_vitality_2","Vitality II", nil, 25, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 15)) pl:SetHealth(pl:GetMaxHealth()) end,6,"+15 Maximum Health",nil)
-GM:AddClassItem("commando_vitality_3","Vitality III", nil, 30, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 20)) pl:SetHealth(pl:GetMaxHealth()) end,12,"+20 Maximum Health",nil)
+GM:AddClassItem("commando_vitality_1","Vitality I", nil, 10, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 10)) pl:SetHealth(pl:GetMaxHealth()) end,nil,"+10 Maximum Health",nil)
+GM:AddClassItem("commando_vitality_2","Vitality II", nil, 15, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 17)) pl:SetHealth(pl:GetMaxHealth()) end,6,"+15 Maximum Health",nil)
+GM:AddClassItem("commando_vitality_3","Vitality III", nil, 25, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 26)) pl:SetHealth(pl:GetMaxHealth()) end,12,"+20 Maximum Health",nil)
 
 GM:AddClassItem(nil,"Grenade", "weapon_zs_grenade", 40,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil)
 GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",80)

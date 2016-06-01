@@ -117,6 +117,11 @@ function ENT:Think()
 					end
 				end
 			end
+			
+			timer.Simple( 3, 	function() net.Start("zs_supplydropstatus")
+				net.WriteString("online")
+			net.Broadcast()	end  ) 
+
 		end
 	end
 	

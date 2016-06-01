@@ -161,13 +161,13 @@ concommand.Add( "unlockitem", function( pl, cmd, args )
 		if tonumber(args[2]) > pl:GetXPCommando() then
 			return
 		else
-			pl:GiveXP(tonumber(args[2]) * -1, "Commando")
+			pl:GiveXP(tonumber(args[2]) * -1, "Skirmisher")
 		end
 	elseif string.match(args[1],"support") then
 		if tonumber(args[2]) > pl:GetXPSupport() then
 			return
 		else
-			pl:GiveXP(tonumber(args[2]) * -1, "Support")
+			pl:GiveXP(tonumber(args[2]) * -1, "Carpenter")
 		end
 	elseif string.match(args[1],"berserker") then
 		if tonumber(args[2]) > pl:GetXPBerserker() then
@@ -175,11 +175,11 @@ concommand.Add( "unlockitem", function( pl, cmd, args )
 		else
 			pl:GiveXP(tonumber(args[2]) * -1, "Berserker")
 		end
-	elseif string.match(args[1],"engineer") then
+	elseif string.match(args[1],"rogue") then
 		if tonumber(args[2]) > pl:GetXPEngineer() then
 			return
 		else
-			pl:GiveXP(tonumber(args[2]) * -1, "Engineer")
+			pl:GiveXP(tonumber(args[2]) * -1, "Rogue")
 		end		
 	end
 
@@ -212,7 +212,7 @@ concommand.Add( "saveData", function( pl )
 end )
 
 concommand.Add( "setClass", function( pl, cmd, args )
-	for k,v in pairs(GAMEMODE.Classes) do
+	for k,v in pairs(GAMEMODE.Classes) do	
 		if string.lower(v) == args[1] or tonumber(k) == tonumber(args[1]) then
 			pl:SetClass(GAMEMODE.Classes[k])
 			print("YOUR CLASS IS: " .. (pl:GetClass()))

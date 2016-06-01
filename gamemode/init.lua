@@ -23,6 +23,7 @@ AddCSLuaFile("sh_crafts.lua")
 AddCSLuaFile("sh_util.lua")
 AddCSLuaFile("sh_options.lua")
 AddCSLuaFile("sh_zombieclasses.lua")
+AddCSLuaFile("sh_humanclasses.lua")
 AddCSLuaFile("sh_animations.lua")
 AddCSLuaFile("sh_sigils.lua")
 AddCSLuaFile("sh_channel.lua")
@@ -312,7 +313,7 @@ function GM:AddResources()
 	resource.AddFile("sound/weapons/melee/keyboard/keyboard_hit-02.ogg")
 	resource.AddFile("sound/weapons/melee/keyboard/keyboard_hit-03.ogg")
 	resource.AddFile("sound/weapons/melee/keyboard/keyboard_hit-04.ogg")
-
+	
 	resource.AddFile("materials/noxctf/sprite_bloodspray1.vmt")
 	resource.AddFile("materials/noxctf/sprite_bloodspray2.vmt")
 	resource.AddFile("materials/noxctf/sprite_bloodspray3.vmt")
@@ -905,7 +906,7 @@ function GM:Think()
 		self:CalculateZombieVolunteers()
 	end
 	
-	if not SUPPLY_DROP_ONLINE and SUPPLY_DROP_LAST_DROP + 100 < CurTime() then
+	if not SUPPLY_DROP_ONLINE and SUPPLY_DROP_LAST_DROP + 120 < CurTime() then
 		SUPPLY_DROP_ONLINE = true
 		net.Start("zs_supplydropstatus")
 		net.WriteString("online")
@@ -3533,7 +3534,7 @@ function GM:PlayerSpawn(pl)
 		pl:SetMaxHealth(1)
 
 		pl:ResetSpeed()
-		pl:SetCrouchedWalkSpeed(classtab.CrouchedWalkSpeed or 0.70)
+		pl:SetCrouchedWalkSpeed(classtab.CrouchedWalkSpeed or 0.4)
 
 		if not pl.Revived or not self:GetWaveActive() or CurTime() > self:GetWaveEnd() then
 			pl.StartCrowing = 0
@@ -3579,7 +3580,7 @@ function GM:PlayerSpawn(pl)
 
 		pl:ResetSpeed()
 		pl:SetJumpPower(DEFAULT_JUMP_POWER)
-		pl:SetCrouchedWalkSpeed(0.65)
+		pl:SetCrouchedWalkSpeed(0.36)
 
 		pl:SetNoTarget(false)
 		pl:SetMaxHealth(100)

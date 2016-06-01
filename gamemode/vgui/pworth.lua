@@ -94,9 +94,9 @@ local function SetClass(class)
 	local classString = nil
 	
 	if class == CLASS_COMMANDO then
-		classString = "commando"
+		classString = "skirmisher"
 	elseif class == CLASS_SUPPORT then
-		classString = "support"
+		classString = "carpenter"
 	elseif class == CLASS_ENGINEER then
 		classString = "engineer"	
 	elseif class == CLASS_BERSERKER then
