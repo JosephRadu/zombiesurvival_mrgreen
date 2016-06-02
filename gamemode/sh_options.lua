@@ -336,11 +336,11 @@ GM:AddClassItem("commando_defender","Defender", "weapon_zs_defender", 60, CLASS_
 
 GM:AddClassItem("commando_vitality_1","Vitality I", nil, 10, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 10)) pl:SetHealth(pl:GetMaxHealth()) end,nil,"+10 Maximum Health",nil)
 GM:AddClassItem("commando_vitality_2","Vitality II", nil, 15, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 17)) pl:SetHealth(pl:GetMaxHealth()) end,6,"+15 Maximum Health",nil)
-GM:AddClassItem("commando_vitality_3","Vitality III", nil, 25, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 26)) pl:SetHealth(pl:GetMaxHealth()) end,12,"+20 Maximum Health",nil)
+GM:AddClassItem("commando_vitality_3","Vitality III", nil, 20, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 26)) pl:SetHealth(pl:GetMaxHealth()) end,12,"+20 Maximum Health",nil)
 
-GM:AddClassItem(nil,"Grenade", "weapon_zs_grenade", 40,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil)
-GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",80)
-GM:AddClassItem(nil,"Resupply box", "weapon_zs_resupplybox", 40,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
+GM:AddClassItem(nil,"Grenade", "weapon_zs_grenade", 10,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil)
+GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 40,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",60)
+GM:AddClassItem(nil,"Resupply box", "weapon_zs_resupplybox", 30,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
 
 
 GM:AddClassItem(nil, "pistol ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",nil)
@@ -374,17 +374,20 @@ GM:AddClassItem("support_nails","Box of 24 nails", nil, 15,  CLASS_SUPPORT,ITEMC
 GM:AddClassItem(nil,"Pack of boards", "weapon_zs_boardpack", 20,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
 GM:AddClassItem(nil,"Message beacon", "weapon_zs_messagebeacon", 5,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
 GM:AddClassItem("support_spotlamp","Spot lamp", "weapon_zs_spotlamp", 10,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,5,nil,nil,nil)
-GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",80)
+GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 40,  CLASS_SUPPORT,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",60)
 
 GM:AddClassItem("support_handy_1","Handy I", nil, 15, CLASS_SUPPORT,ITEMCAT_PERKS,function(pl) pl.HumanRepairMultiplier = (pl.HumanRepairMultiplier or 1) + 0.2 end,nil,"+20% repair rate","models/props_c17/tools_wrench01a.mdl")
 GM:AddClassItem("support_handy_2","Handy II", nil, 15, CLASS_SUPPORT,ITEMCAT_PERKS,function(pl) pl.HumanRepairMultiplier = (pl.HumanRepairMultiplier or 1) + 0.2 end,10,"+20% repair rate","models/props_c17/tools_wrench01a.mdl")
 
--- Berserker
+-- Berserker --
 GM:AddClassItem("scrap_p228","P228", "weapon_zs_peashooter", 30,  CLASS_BERSERKER,ITEMCAT_WEAPONS,nil,nil,nil,nil,20)
 GM:AddClassItem("scrap_owens","Owens Handgun", "weapon_zs_owens", 30,  CLASS_BERSERKER,ITEMCAT_WEAPONS,nil,nil,nil,nil,20)
 GM:AddClassItem(nil,"USP", "weapon_zs_battleaxe", 30, CLASS_BERSERKER,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
+
+GM:AddClassItem("berserker_deagle","Desert Eagle", "weapon_zs_deagle", 50, CLASS_BERSERKER,ITEMCAT_WEAPONS,nil,14,nil,nil,nil)
+
 GM:AddClassItem(nil,"Axe", "weapon_zs_axe", 30, CLASS_BERSERKER,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
-GM:AddClassItem("berseker_sledgehammer","Sledgehammer", "weapon_zs_sledgehammer", 45, CLASS_BERSERKER,ITEMCAT_WEAPONS,nil,12,nil,nil,nil)
+GM:AddClassItem("berseker_sledgehammer","Sledgehammer", "weapon_zs_sledgehammer", 45, CLASS_BERSERKER,ITEMCAT_WEAPONS,nil,14,nil,nil,nil)
 GM:AddClassItem("berserker_hook","Meat hook", "weapon_zs_hook", 30, CLASS_BERSERKER,ITEMCAT_WEAPONS,nil,8,nil,nil,nil)
 
 GM:AddClassItem(nil, "pistol ammo box", nil, 10, CLASS_BERSERKER, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",nil)
@@ -393,17 +396,43 @@ GM:AddClassItem("scrap_pistol_3", "3 pistol ammo boxes", nil, 20, CLASS_BERSERKE
 GM:AddClassItem(nil,"Stone", "weapon_zs_stone", 5, CLASS_BERSERKER,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
 
 GM:AddClassItem("berserker_resistant","Resistant", nil, 10, CLASS_BERSERKER,ITEMCAT_PERKS,function(pl) pl.BuffResistant = true end,6,"+50% poison resistance","models/healthvial.mdl")
-GM:AddClassItem("berserker_regen","Regenerative", nil, 15, CLASS_BERSERKER,ITEMCAT_PERKS,function(pl) pl.BuffRegenerative = true end,nil,"If you drop below 50% health, you will regenerate 1 health every 6 seconds.","models/healthvial.mdl")
 GM:AddClassItem("berserker_muscular","Muscular", nil, 20, CLASS_BERSERKER,ITEMCAT_PERKS,function(pl) pl.BuffMuscular = true pl:DoMuscularBones() end,10,"You do 20% extra damage with melee weapons and you can carry heavy objects instead of dragging them.","models/props_wasteland/kitchen_shelf001a.mdl")
 GM:AddClassItem("berserker_speed_1","Speed I", nil, 10, CLASS_BERSERKER,ITEMCAT_PERKS,function(pl) pl.HumanSpeedAdder = (pl.HumanSpeedAdder or 0) + 14 pl:ResetSpeed() end,2,"+14 speed","models/props_lab/jar01a.mdl")
 GM:AddClassItem("berserker_speed_2","Speed II", nil, 15, CLASS_BERSERKER,ITEMCAT_PERKS,function(pl) pl.HumanSpeedAdder = (pl.HumanSpeedAdder or 0) + 20 pl:ResetSpeed() end,12,"+20 speed","models/props_lab/jar01a.mdl")
 
-GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 60,  CLASS_BERSERKER,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",80)
+-- Rogue -- 
+GM:AddClassItem("scrap_p228","P228", "weapon_zs_peashooter", 30,  CLASS_ENGINEER,ITEMCAT_WEAPONS,nil,nil,nil,nil,20)
+GM:AddClassItem("scrap_owens","Owens Handgun", "weapon_zs_owens", 30,  CLASS_ENGINEER,ITEMCAT_WEAPONS,nil,nil,nil,nil,20)
+GM:AddClassItem(nil,"USP", "weapon_zs_battleaxe", 30, CLASS_ENGINEER,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
+
+GM:AddClassItem(nil, "pistol ammo box", nil, 10, CLASS_ENGINEER, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",nil)
+GM:AddClassItem("scrap_pistol_3", "3 pistol ammo boxes", nil, 20, CLASS_ENGINEER, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["pistol"] or 12) * 3, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",20)
+
+GM:AddClassItem(nil, "pulse ammo box", nil, 10, CLASS_ENGINEER, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pulse"] or 30, "pulse", true) end,nil,nil,"models/Items/combine_rifle_ammo01.mdl",nil)
+GM:AddClassItem("scrap_pulse_3", "3 pulse ammo boxes", nil, 20, CLASS_ENGINEER, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["pulse"] or 30) * 3, "pulse", true) end,nil,nil,"models/Items/combine_rifle_ammo01.mdl",10)
+GM:AddClassItem("scrap_pulse_5", "5 pulse ammo boxes", nil, 30, CLASS_ENGINEER, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["pulse"] or 30) * 5, "pulse", true) end,nil,nil,"models/Items/combine_rifle_ammo01.mdl",30)
 
 
 
 
 
+GM:AddClassItem(nil,"Z9000", "weapon_zs_z9000", 35, CLASS_ENGINEER,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
+
+GM:AddClassItem(nil,"Detonation Pack", "weapon_zs_detpack", 5, CLASS_ENGINEER,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
+
+local item = GM:AddClassItem(nil, "Infrared Gun Turret", nil, 30, CLASS_ENGINEER, ITEMCAT_TOOLS, function(pl)
+	pl:GiveEmptyWeapon("weapon_zs_gunturret")
+	pl:GiveAmmo(1, "thumper")
+	pl:GiveAmmo(250, "smg1")
+end,nil,nil,nil,nil)
+item.Countables = {"weapon_zs_gunturret", "prop_gunturret"}
+
+local item = GM:AddClassItem("engineer_turret", "2 Infrared Gun Turrets", nil, 55, CLASS_ENGINEER, ITEMCAT_TOOLS, function(pl)
+	pl:GiveEmptyWeapon("weapon_zs_gunturret")
+	pl:GiveAmmo(2, "thumper")
+	pl:GiveAmmo(500, "smg1")
+end,10,nil,nil,nil)
+item.Countables = {"weapon_zs_gunturret", "prop_gunturret"}
 
 -- GLOBAL --
 

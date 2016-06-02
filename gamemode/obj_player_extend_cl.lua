@@ -163,6 +163,13 @@ function meta:SetZombieClass(cl)
 	end
 end
 
+function meta:SetHumanClass(cl)
+	local classtab = GAMEMODE.HumanClasses[cl]
+	if classtab then
+		self.HumanClass = classtab.Index or cl
+	end
+end
+
 net.Receive("zs_penalty", function(length)
 	local penalty = net.ReadUInt(16)
 

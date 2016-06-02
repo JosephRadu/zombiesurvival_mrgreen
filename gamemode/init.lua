@@ -942,8 +942,8 @@ function GM:Think()
 					pl:PrintTranslatedMessage(HUD_PRINTCONSOLE, "minute_points_added", 2)
 				end
 
-				if pl.BuffRegenerative and time >= pl.NextRegenerate and pl:Health() < pl:GetMaxHealth() / 2 then
-					pl.NextRegenerate = time + 5
+				if pl.BuffRegenerative and time >= pl.NextRegenerate and pl:Health() < 65 then
+					pl.NextRegenerate = time + 1
 					pl:SetHealth(pl:Health() + 1)
 				end
 

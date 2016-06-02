@@ -18,19 +18,33 @@ function meta:GetXPBerserker()
 	return self.XP_Berserker
 end
 
+function meta:CallHumanFunction(funcname, ...)
+	if self:Team() == TEAM_HUMAN then
+		local tab = self:GetHumanClassTable()
+		if tab[funcname] then
+			return tab[funcname](tab, self, ...)
+		end
+	end
+end
+
+function meta:GetHumanClassTable()
+	return GAMEMODE.HumanClasses[self:GetClass()]
+end
+
 function meta:SetClass(class)
+	self.CurrentClass = class
+	
 	for k,v in pairs(GAMEMODE.HumanClasses) do
 		if (v.Name == class ) then
+			
 			self:SetMaxHealth(math.max(1, v.Health)) self:SetHealth(self:GetMaxHealth())
 			self.HumanSpeedAdder = (self.HumanSpeedAdder or 0) + v.BonusSpeed
 			
-			v:CallBack(self)
+			self:CallHumanFunction("Loadout")
 
 			self:ResetSpeed()
 		end
 	end
-
-	self.CurrentClass = class
 end
 
 function meta:GetClass()

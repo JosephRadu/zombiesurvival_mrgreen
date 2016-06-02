@@ -98,7 +98,7 @@ local function SetClass(class)
 	elseif class == CLASS_SUPPORT then
 		classString = "carpenter"
 	elseif class == CLASS_ENGINEER then
-		classString = "engineer"	
+		classString = "rogue"	
 	elseif class == CLASS_BERSERKER then
 		classString = "berserker"			
 	end
@@ -261,6 +261,18 @@ function MakepWorth()
 
 	local defaultcart = cvarDefaultCart:GetString()
 	local classPanel = {}
+	
+	classDescriptionFrame = vgui.Create("DEXRoundedPanel",frame)
+	classDescriptionFrame:SetText("")
+	classDescriptionFrame:SetPos(10, hei * 0.5 )
+	classDescriptionFrame:SetSize( wid * 0.18, hei * 0.33 )
+	
+	classDescription = vgui.Create("DLabel",classDescriptionFrame)
+	classDescription:SetFont("ZSHUDFontSmallest")
+	classDescription:SetText("")
+	classDescription:SetPos(10,0)
+	classDescription:SetSize( wid * 0.18, hei * 0.33 )
+
 		
 	for classid, classname in ipairs(GAMEMODE.Classes) do
 		local xpAmount = (XP[classid] or 0)
@@ -415,6 +427,8 @@ function MakepWorth()
 				v:SetVisible(false)
 				if k == classid then
 					classPanel[classid]:SetVisible(true)
+					classDescription:SetText("Attributes:\n" ..   GAMEMODE.HumanClasses[classname].Health .. " Health\n" ..  GAMEMODE.HumanClasses[classname].BonusSpeed .. " Bonus speed\n" .. "\nAdvantages:\n" .. GAMEMODE.HumanClasses[classname].LoadoutDescription)
+					
 				end
 			end
 			
