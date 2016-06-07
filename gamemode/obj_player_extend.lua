@@ -932,7 +932,7 @@ function meta:DropLootAmmo(attacker)
 	if math.random(1,10) == 1 then
 		local scrapAmount = math.random(3,6)
 		for i=1, scrapAmount do
-			local ent = ents.Create("prop_scrap")
+			local ent = ents.Create("resource_scrap")
 			if ent:IsValid() then
 				ent:SetPos(pos)
 				ent:Spawn()

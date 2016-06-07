@@ -109,3 +109,17 @@ function meta:CashOut()
 	self:TakePoints(self:GetPoints())
 	print("Cashed out for " .. giveXP .. "XP!")
 end
+
+function meta:GiveResource(resource, amount)
+	if (amount != nil) then
+		print("RECEIVED: " .. resource .. " AMOUNT " .. amount)
+		self.Resources[ resource ] = self.Resources[ resource ] + amount
+	else
+		print("RECEIVED: " .. resource )
+		self.Resources[ resource ] = self.Resources[ resource ] + 1	
+	end
+end
+
+function meta:GetResource(resource)
+	return self.Resources[resource]
+end

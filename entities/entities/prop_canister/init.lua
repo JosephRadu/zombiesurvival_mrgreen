@@ -83,9 +83,9 @@ function ENT:Think()
 			effectdata:SetOrigin(self:GetPos())
 			util.Effect("Explosion", effectdata)
 			
-			local scrapAmount = math.random(4,6)
+			local scrapAmount = 5
 			for i=1, scrapAmount do
-				local ent = ents.Create("prop_scrap")
+				local ent = ents.Create("projectile_scrap")
 				if ent:IsValid() then
 					ent:SetPos(self:GetPos() + Vector(0,0,16))
 					ent:Spawn()

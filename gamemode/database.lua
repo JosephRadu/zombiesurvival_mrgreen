@@ -17,8 +17,8 @@ function GM:SendPlayerData(pl)
 		net.WriteFloat(pl.XP_Engineer)
 		net.WriteFloat(pl.XP_Support)
 		net.WriteFloat(pl.XP_Berserker)
-		net.WriteFloat(pl.Scrap)
 		net.WriteTable(pl.Items)
+		net.WriteTable(pl.Resources)
 	net.Send(pl)
 end
 
@@ -35,13 +35,21 @@ function GM:GetBlankStats( pl )
 		[ 'playtime' ] = 0,
 		[ 'items' ] = {},
 		[ 'xp' ] = 
-		{
-			[ 'commando' ] = 0,
-			[ 'support' ] = 0,
-			[ 'engineer' ] = 0,
-			[ 'berserker' ] = 0
-		},
-		[ 'scrap' ] = 20
+			{
+				[ 'commando' ] = 0,
+				[ 'support' ] = 0,
+				[ 'engineer' ] = 0,
+				[ 'berserker' ] = 0
+			},
+		[ 'resources' ] = 
+			{
+				[ 'bones' ] = 0,
+				[ 'ichor' ] = 0,
+				[ 'undeath' ] = 0,		
+				[ 'scrap' ] = 20					
+			}
+		
+		--[ 'scrap' ] = 20
 		--[ 'points' ] = 0
 	}
 
@@ -49,7 +57,12 @@ function GM:GetBlankStats( pl )
 	pl.XP_Support = 0
 	pl.XP_Engineer = 0
 	pl.XP_Berserker = 0
-	pl.Scrap = 20	
+	pl.Resources = {
+		[ 'bones' ] = 0,
+		[ 'ichor' ] = 0,
+		[ 'undeath' ] = 0,	
+		[ 'scrap' ] = 20			
+	}	
 
 	return data
 end
@@ -75,7 +88,7 @@ function GM:ReadData( pl )
 	end
 	fileData = util.JSONToTable( file.Read( path ) )
 	pl.DataTable = table.Copy( fileData )
-						
+	pl.Resources = {}
 	for k, v in pairs( pl.DataTable ) do
 		if( k == 'items' ) then
 			pl.Items = v
@@ -99,8 +112,21 @@ function GM:ReadData( pl )
 				end
 			end
 		end
-		if ( k == 'scrap' ) then
-			pl.Scrap = v
+		if ( k == 'resources' ) then
+			for p, j in pairs( v ) do
+				if( p == 'bones' ) then
+					pl.Resources[ 'bones' ] = j
+				end		
+				if( p == 'ichor' ) then
+					pl.Resources[ 'ichor' ] = j
+				end
+				if( p == 'undeath' ) then
+					pl.Resources[ 'undeath' ] = j
+				end		
+				if( p == 'scrap' ) then
+					pl.Resources[ 'scrap' ] = j
+				end					
+			end
 		end
 		--if ( k == 'points' ) then
 		--	pl:SetPoints(v)
@@ -125,7 +151,13 @@ function GM:SaveData( pl )
 					[ 'engineer' ] = pl:GetXPEngineer(),
 					[ 'berserker' ] = pl:GetXPBerserker()
 				},
-			[ 'scrap' ] = pl:GetScrap(),
+			[ 'resources' ] = 
+				{
+					[ 'bones' ] = pl:GetResource('bones'),
+					[ 'ichor' ] = pl:GetResource('ichor'),
+					[ 'undeath' ] = pl:GetResource('undeath'),				
+					[ 'scrap' ] = pl:GetResource('scrap')						
+				},	
 			[ 'points' ] = pl:GetPoints()			
 		}
 	local newData =  util.TableToJSON( data )
@@ -187,14 +219,30 @@ concommand.Add( "unlockitem", function( pl, cmd, args )
 	GAMEMODE:SaveData(pl)
 end )
 
-concommand.Add( "unlockscrapitem", function( pl, cmd, args )
-	if tonumber(args[2]) > pl:GetScrap() then
-		return
-	else
-		pl:GiveScrap(tonumber(args[2]) * -1)
+concommand.Add( "unlockresourceitem", function( pl, cmd, args )
+	local item
+	for i, tab in pairs(GAMEMODE.ClassItems) do
+		if tab.Signature == args[1] then
+			item = tab
+			PrintTable(tab)
+			
+			break
+		end
 	end
+
+	for k, v in pairs (item.Resources) do
+		if (v > pl:GetResource(k)) then
+			return
+		end
+	end
+	
+	for k, v in pairs (item.Resources) do
+		pl:GiveResource(k, (v * -1))
+	end	
+
 	pl:UnlockItem(args[ 1 ])
 	GAMEMODE:SaveData(pl)
+	return true
 end )
 
 concommand.Add( "givexp", function( pl, cmd, args )
@@ -224,6 +272,14 @@ end )
 concommand.Add( "givescrap", function( pl, cmd, args )
 	if( args[ 1 ] && IsValid( pl ) ) then
 		pl:GiveScrap( tonumber( args[ 1 ] ) )
+	end
+end )
+
+concommand.Add("giveresource", function(pl, cmd, args )
+	if (args[2] != nil) then
+		pl:GiveResource(args[1],args[2])
+	else
+		pl:GiveResource(args[1])
 	end
 end )
 

@@ -13,11 +13,13 @@ local classFrames = {}
 
 local classList = {}
 local lists = {}
+resourceFrame = {}
 
 UnlockedItems = {}
 
 XP = {}
 SCRAP = 0
+RESOURCES = {}
 
 net.Receive("sendplayerdata", function()
 
@@ -25,8 +27,9 @@ net.Receive("sendplayerdata", function()
 	XP[CLASS_ENGINEER] = net.ReadFloat()
 	XP[CLASS_SUPPORT] = net.ReadFloat()
 	XP[CLASS_BERSERKER] = net.ReadFloat()
-	SCRAP = net.ReadFloat()
+	SCRAP = 20
 	UnlockedItems = net.ReadTable()
+	RESOURCES = net.ReadTable()
 	MakepWorth()
 end)
 
@@ -242,7 +245,7 @@ function MakepWorth()
 	local maxworth = GAMEMODE.StartingWorth
 	WorthRemaining = maxworth
 
-	local wid, hei = math.min(ScrW(), 1024), ScrH() * 0.7
+	local wid, hei = math.min(ScrW(), 1280), ScrH() * 0.7
 
 	local frame = vgui.Create("DFrame")
 	pWorth = frame
@@ -270,15 +273,42 @@ function MakepWorth()
 	classDescription = vgui.Create("DLabel",classDescriptionFrame)
 	classDescription:SetFont("ZSHUDFontSmallest")
 	classDescription:SetText("")
-	classDescription:SetPos(10,0)
+	classDescription:SetContentAlignment( 7 ) 
+	classDescription:SetPos(10,(hei * 0.33) * 0.02)
 	classDescription:SetSize( wid * 0.18, hei * 0.33 )
-
+	
+	resourcePanel = vgui.Create("DEXRoundedPanel",frame)
+	resourcePanel:SetText("")
+	resourcePanel:SetPos((wid) - (wid * 0.195), hei * 0.5)
+	resourcePanel:SetSize( wid * 0.18, hei * 0.33 )
+	
+	local resourceColor = {
+		["bones"] = Color(227,235,230),
+		["ichor"] = Color(135,190,140),
+		["undeath"] = Color(85,150,130),		
+		["scrap"] = Color(190,190,190)				
+	}
+	
+	local i = 0
+	local resourceWidth, resourceHeight = resourcePanel:GetSize()
+	
+	for k,v in pairs (RESOURCES) do
+		resourceFrame[k] = vgui.Create("DLabel",resourcePanel)
+		resourceFrame[k]:SetFont("ZSHUDFontSmallest")
+		resourceFrame[k]:SetText(k .. ": " .. v)
+		resourceFrame[k]:SetContentAlignment( 7 ) 
+		resourceFrame[k]:SetPos(10,resourceHeight * 0.02 + (i * (resourceHeight * 0.1)))
+		resourceFrame[k]:SetSize( resourceWidth, (resourceHeight * 0.1))	
+		resourceFrame[k]:SetTextColor(resourceColor[k])
+		i = i + 1	
+	end
 		
 	for classid, classname in ipairs(GAMEMODE.Classes) do
 		local xpAmount = (XP[classid] or 0)
 		classButton[classid] = vgui.Create( "DButton", propertysheet )
 		classButton[classid]:SetText(classname .. "\n" .. xpAmount .. "/" .. LIMIT_XP .. " XP" )
-		classButton[classid]:AlignLeft()
+		--classButton[classid]:AlignLeft()
+		classButton[classid]:SetContentAlignment( 5 ) 
 		classButton[classid].Class = classid
 		classButton[classid]:SetTextColor( Color( 255, 255, 255 ) )
 		classButton[classid]:SetPos(10, -50 + classid * 50 )
@@ -297,16 +327,16 @@ function MakepWorth()
 		
 		classButton[classid]:SetFont("ZSHUDFontSmallest")
 		classPanel[classid] = vgui.Create("DPanel",frame)
-		classPanel[classid]:SetSize(wid * 0.67, hei * 0.8)
+		classPanel[classid]:SetSize(wid * 0.59, hei * 0.8)
 		classPanel[classid]:SetKeyboardInputEnabled(false)
-		classPanel[classid]:SetPos(216,26)
+		classPanel[classid]:SetPos(wid * 0.2,26)
 		classPanel[classid]:SetVisible(false)
 		
 		classPanel[classid]:SetBackgroundColor(Color(255,255,255,255))
 		classPanel[classid]:SetAlpha(255)
 		
 		local classSheet = vgui.Create("DPropertySheet",classPanel[classid])
-		classSheet:SetSize(wid * 0.67, hei * 0.8)
+		classSheet:SetSize(wid * 0.59, hei * 0.8)
 		classSheet:SetKeyboardInputEnabled(false)
 		classSheet:SetPos(0,0)		
 		classSheet.Paint = function() end
@@ -397,6 +427,7 @@ function MakepWorth()
 			classSheet:AddSheet(classcategory,list, GAMEMODE.ItemCategoryIcons[classcategoryid], false, false)
 			list:EnableVerticalScrollbar(true)
 			list:SetWide(classSheet:GetWide() - 16)
+			
 			list:SetSpacing(1)
 			list:SetPadding(1)
 			for i, tab in ipairs(GAMEMODE.ClassItems) do
@@ -407,7 +438,7 @@ function MakepWorth()
 					list:AddItem(button)
 					WorthButtons[i] = button
 					
-					if (tab.XP or tab.Scrap)and CheckUnlockedItem(tab.Signature) then
+					if (tab.XP or tab.Resources) and CheckUnlockedItem(tab.Signature) then
 						tab.Unlocked = true
 					end
 				end
@@ -438,7 +469,6 @@ function MakepWorth()
 				end
 			end
 		end
-
 	end
 
 	for k,v in pairs (classButton) do
@@ -545,6 +575,11 @@ function PANEL:Init()
 	self.NameLabel = EasyLabel(self, "", "ZSHUDFontSmall")
 	self.NameLabel:SetContentAlignment(4)
 	self.NameLabel:Dock(FILL)
+	
+	self.ResourceLabel = EasyLabel(self, "", "ZSHUDFontTiny")
+	self.ResourceLabel:SetContentAlignment(5)
+	self.ResourceLabel:Dock(FILL)
+	self.ResourceLabel:SetTextColor(Color(255,255,0))	
 
 	self.PriceLabel = EasyLabel(self, "", "ZSHUDFontTiny")
 	self.PriceLabel:SetWide(80)
@@ -601,15 +636,24 @@ function PANEL:SetWorthID(id)
 		self:SetAlpha(255)
 	end
 	
+	local sizex, sizey = self.NameLabel:GetSize()
+	
 	self.NameLabel:SetText(tab.Name or "")
 	if tab.XP and not tab.Unlocked then
-		self:SetAlpha(100)
+		self:SetAlpha(130)
 		self.NameLabel:SetText(tab.Name .. " (" .. tab.XP .. " XP)")
 	end
 	
-	if tab.Scrap and not tab.Unlocked then
-		self:SetAlpha(100)
-		self.NameLabel:SetText(tab.Name .. " (" .. tab.Scrap .. " Scrap)")
+	if tab.Resources and not tab.Unlocked then
+		self:SetAlpha(130)
+		local resourceText = "("
+		
+		for k,v in pairs (tab.Resources) do
+			resourceText = resourceText .. v .. " " .. k .. ", "
+		end
+		
+		resourceText = resourceText .. ")"
+		self.ResourceLabel:SetText(resourceText)
 	end
 	
 end
@@ -621,12 +665,27 @@ local function UnlockItem(tab,self)
 	"No", function() return end) 
 end
 
-local function UnlockScrapItem(tab,self)
+function CanBuy(caca)
+	for k, v in pairs (caca) do
+		if (v > RESOURCES[k]) then
+			return false
+		end
+	end
+	return true
+end
+
+local function UnlockResourceItem(tab,self)
+
+	local resourceText = "("
+	for k,v in pairs (tab.Resources) do
+		resourceText = resourceText .. v .. " " .. k .. ", "
+	end
+	resourceText = resourceText .. ")"
+		
 	surface.PlaySound("buttons/button9.wav")
-	Derma_Query("Unlock " .. tostring(tab.Name) .. " for " .. tostring(tab.Scrap) .. " Scrap?","",
-	"Yes",function() if SCRAP != nil and SCRAP >= tab.Scrap then RunConsoleCommand("unlockscrapitem", tab.Signature, tab.Scrap) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf scrap", "", ":(" ) end end,
+	Derma_Query("Unlock " .. tostring(tab.Name) .. " for " .. resourceText .. " ?","",
+	"Yes",function() if CanBuy(tab.Resources) then RunConsoleCommand("unlockresourceitem", tab.Signature, tab.Resources) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf scrap", "", ":(" ) end end,
 	"No", function() return end) 
-	pScrap.ScrapLab:SetText(" Scrap: ".. SCRAP .."/" .. LIMIT_SCRAP)	
 end
 
 function PANEL:Paint(w, h)
@@ -652,8 +711,8 @@ function PANEL:DoClick(silent, force, auto)
 		return
 	end
 	
-	if tab.Scrap and not tab.Unlocked and not auto then
-		UnlockScrapItem(tab,self)
+	if tab.Resources and not tab.Unlocked and not auto then
+		UnlockResourceItem(tab,self)
 		return
 	end
 

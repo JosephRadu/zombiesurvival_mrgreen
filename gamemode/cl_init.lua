@@ -998,6 +998,7 @@ function GM:CreateVGUI()
 	end
 	self.CenterNotificationHUD:InvalidateLayout()
 	self.CenterNotificationHUD:ParentToHUD()
+	
 end
 
 function GM:Initialize()
