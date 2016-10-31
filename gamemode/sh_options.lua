@@ -331,21 +331,8 @@ end
 -- COMMANDO -- 
 GM:AddClassItem("global_p228","P228", "weapon_zs_peashooter", 30,  CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil, {["scrap"] = 20, ["bones"] = 2})
 GM:AddClassItem("global_owens","Owens Handgun", "weapon_zs_owens", 30,  CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil, {["undeath"] = 1, ["bones"] = 1})
---[[
-GM:AddClassItem(nil,"USP", "weapon_zs_battleaxe", 30, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
-
-GM:AddClassItem("commando_mp7","MP7", "weapon_zs_tosser", 40, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,8,nil,nil,nil)
-GM:AddClassItem(nil,"Famas", "weapon_zs_crackler", 50, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
-GM:AddClassItem("commando_musket","Musket", "weapon_zs_musket", 60, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,18,nil,nil,nil)
-GM:AddClassItem("commando_defender","Defender", "weapon_zs_defender", 60, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,14,nil,nil,nil)
-
-GM:AddClassItem("commando_vitality_1","Vitality I", nil, 10, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 10)) pl:SetHealth(pl:GetMaxHealth()) end,nil,"+10 Maximum Health",nil)
-GM:AddClassItem("commando_vitality_2","Vitality II", nil, 15, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 17)) pl:SetHealth(pl:GetMaxHealth()) end,6,"+15 Maximum Health",nil)
-GM:AddClassItem("commando_vitality_3","Vitality III", nil, 20, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 26)) pl:SetHealth(pl:GetMaxHealth()) end,12,"+20 Maximum Health",nil)
-
-GM:AddClassItem(nil,"Grenade", "weapon_zs_grenade", 10,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil)
-GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 40,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",nil)
-GM:AddClassItem(nil,"Resupply box", "weapon_zs_resupplybox", 30,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
+GM:AddClassItem("commando_mp7","MP7", "weapon_zs_tosser", 40, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil,{["bones"] = 5, ["scrap"] = 5, ["ichor"] = 1})
+GM:AddClassItem("commando_musket","Musket", "weapon_zs_musket", 60, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil,{["scrap"] = 10, ["ichor"] = 1})
 
 
 GM:AddClassItem(nil, "pistol ammo box", nil, 10, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo(GAMEMODE.AmmoCache["pistol"] or 12, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",nil)
@@ -356,6 +343,25 @@ GM:AddClassItem("scrap_smg_3", "3 smg ammo boxes", nil, 20, CLASS_COMMANDO, ITEM
 GM:AddClassItem("scrap_ar2_3", "3 assault rifle ammo boxes", nil, 20, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["ar2"] or 30) * 3, "ar2", true) end,nil,nil,"models/Items/357ammobox.mdl",nil)
 GM:AddClassItem("scrap_pistol_3", "3 pistol ammo boxes", nil, 20, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["pistol"] or 12) * 3, "pistol", true) end,nil,nil,"models/Items/BoxSRounds.mdl",nil)
 GM:AddClassItem("scrap_buckshot_3", "3 shotgun ammo boxes", nil, 20, CLASS_COMMANDO, ITEMCAT_AMMO,function(pl) pl:GiveAmmo((GAMEMODE.AmmoCache["buckshot"] or 8) * 3, "buckshot", true) end,nil,nil,"models/Items/BoxBuckshot.mdl",nil)
+
+GM:AddClassItem("commando_vitality_1","Vitality I", nil, 10, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 10)) pl:SetHealth(pl:GetMaxHealth()) end,nil,"+10 Maximum Health",nil)
+GM:AddClassItem("commando_vitality_2","Vitality II", nil, 15, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 17)) pl:SetHealth(pl:GetMaxHealth()) end,6,"+15 Maximum Health",nil)
+GM:AddClassItem("commando_vitality_3","Vitality III", nil, 20, CLASS_COMMANDO,ITEMCAT_PERKS,function(pl) pl:SetMaxHealth(math.max(1, pl:GetMaxHealth() + 26)) pl:SetHealth(pl:GetMaxHealth()) end,12,"+20 Maximum Health",nil)
+
+GM:AddClassItem(nil,"Grenade", "weapon_zs_grenade", 10,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil)
+GM:AddClassItem("scrap_flaregun","Flare gun", "weapon_zs_flaregun", 40,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,"models/props_phx2/garbage_metalcan001a.mdl",nil)
+GM:AddClassItem(nil,"Resupply box", "weapon_zs_resupplybox", 20,  CLASS_COMMANDO,ITEMCAT_TOOLS,nil,nil,nil,nil,nil)
+
+
+
+
+--[[
+
+GM:AddClassItem(nil,"Famas", "weapon_zs_crackler", 50, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,nil,nil,nil,nil)
+GM:AddClassItem("commando_defender","Defender", "weapon_zs_defender", 60, CLASS_COMMANDO,ITEMCAT_WEAPONS,nil,14,nil,nil,nil)
+
+
+
 
 
 -- SUPPORT -- 

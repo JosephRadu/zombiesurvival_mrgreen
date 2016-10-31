@@ -18,11 +18,9 @@ resourceFrame = {}
 UnlockedItems = {}
 
 XP = {}
-SCRAP = 0
 RESOURCES = {}
 
 net.Receive("sendplayerdata", function()
-
 	XP[CLASS_COMMANDO] = net.ReadFloat()
 	XP[CLASS_ENGINEER] = net.ReadFloat()
 	XP[CLASS_SUPPORT] = net.ReadFloat()
@@ -482,10 +480,6 @@ function MakepWorth()
 	worthlab:SetPos(8, frame:GetTall() - worthlab:GetTall() - 8)
 	frame.WorthLab = worthlab
 	
-	local scraplab = EasyLabel(frame, (" Scrap: ".. SCRAP .."/"..LIMIT_SCRAP), "ZSHUDFontSmall", COLOR_DARKGREEN)
-	scraplab:SetPos(8, frame:GetTall() - scraplab:GetTall() - 48)
-	frame.ScrapLab = scraplab
-
 	local checkout = vgui.Create("DButton", frame)
 	checkout:SetFont("ZSHUDFontSmall")
 	checkout:SetText("Checkout")
@@ -684,7 +678,7 @@ local function UnlockResourceItem(tab,self)
 		
 	surface.PlaySound("buttons/button9.wav")
 	Derma_Query("Unlock " .. tostring(tab.Name) .. " for " .. resourceText .. " ?","",
-	"Yes",function() if CanBuy(tab.Resources) then RunConsoleCommand("unlockresourceitem", tab.Signature, tab.Resources) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf scrap", "", ":(" ) end end,
+	"Yes",function() if CanBuy(tab.Resources) then RunConsoleCommand("unlockresourceitem", tab.Signature, tab.Resources) surface.PlaySound("buttons/button6.wav") else surface.PlaySound("buttons/button11.wav") Derma_Message( "not enuf resources", "", ":(" ) end end,
 	"No", function() return end) 
 end
 
